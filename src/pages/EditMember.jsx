@@ -101,6 +101,8 @@ export default function EditMember() {
 
       await updateMember(memberId, {
         ...form,
+        birth_date: form.birth_date || null,
+        death_date: form.death_date || null,
         profile_photo,
         social_links: socials,
         interests,

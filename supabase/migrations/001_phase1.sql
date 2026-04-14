@@ -182,6 +182,8 @@ create policy "Owners can update their trees" on public.family_trees
   for update using (owner_id = auth.uid());
 create policy "Owners can delete their trees" on public.family_trees
   for delete using (owner_id = auth.uid());
+create policy "Owners can view their trees" on public.family_trees
+  for select using (owner_id = auth.uid());
 
 -- tree_members
 create policy "Members can view tree_members" on public.tree_members
