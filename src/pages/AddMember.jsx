@@ -80,15 +80,15 @@ export default function AddMember() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-xl mx-auto px-4 py-10">
-        <Link to={`/trees/${treeId}`} className="text-slate-500 hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+        <Link to={`/trees/${treeId}`} className="text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
           ← Back to Tree
         </Link>
 
-        <h1 className="text-2xl font-bold text-white mt-2 mb-1">Add Family Member</h1>
-        <p className="text-slate-500 text-sm mb-8">Add a new person to this family tree.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Add Family Member</h1>
+        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400 text-sm mb-8">Add a new person to this family tree.</p>
 
         {serverError && (
           <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
@@ -129,8 +129,8 @@ export default function AddMember() {
 
           {/* Relationship to existing member */}
           {existingMembers.length > 0 && (
-            <div className="border-t border-slate-800 pt-5 space-y-4">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-5 space-y-4">
+              <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                 Relationship (optional)
               </p>
               <div>
@@ -176,11 +176,11 @@ export default function AddMember() {
           )}
 
           {/* Link to registered user (optional) */}
-          <div className="border-t border-slate-800 pt-5 space-y-3">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-5 space-y-3">
+            <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
               Link to Registered User <span className="font-normal normal-case text-slate-600">(optional)</span>
             </p>
-            <p className="text-xs text-slate-500">If this person already has an account, link them so they can manage their own profile.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-400">If this person already has an account, link them so they can manage their own profile.</p>
             <div>
               <label className="label">Search by email</label>
               <input
@@ -193,7 +193,7 @@ export default function AddMember() {
               />
             </div>
             {userSearching && (
-              <p className="text-xs text-slate-500 flex items-center gap-1.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="inline-block w-3 h-3 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
                 Searching…
               </p>
@@ -207,7 +207,7 @@ export default function AddMember() {
                 <button
                   type="button"
                   onClick={() => { setLinkedUser(null); setUserEmail(''); }}
-                  className="text-xs text-slate-500 hover:text-red-400 transition-colors"
+                  className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-red-400 transition-colors"
                 >
                   ✕ Clear
                 </button>

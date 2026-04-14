@@ -111,9 +111,8 @@ function CustomNode({ nodeDatum, onNodeClick, toggleNode }) {
     );
   }
 
-  const avatarColor = isCurrentUser ? '#7c3aed' : isDeceased ? '#475569' : '#4f46e5';
-  const borderColor = isCurrentUser ? '#a78bfa' : isDeceased ? '#64748b' : '#818cf8';
-  const textColor = isDeceased ? '#94a3b8' : '#f1f5f9';
+  const avatarColor = isCurrentUser ? '#7c3aed' : isDeceased ? '#64748b' : '#6366f1';
+  const borderColor = isCurrentUser ? '#a78bfa' : isDeceased ? '#94a3b8' : '#818cf8';
 
   return (
     <g
@@ -142,16 +141,15 @@ function CustomNode({ nodeDatum, onNodeClick, toggleNode }) {
 
       {/* Deceased cross */}
       {isDeceased && (
-        <text x={r + 2} y={-r + 2} fontSize={10} fill="#94a3b8">†</text>
+        <text x={r + 2} y={-r + 2} fontSize={10} className="fill-slate-500 dark:fill-slate-400">†</text>
       )}
 
-      {/* Name label */}
       <text
         textAnchor="middle"
         y={r + 16}
         fontSize={11}
         fontWeight="600"
-        fill={textColor}
+        className={isDeceased ? "fill-slate-500 dark:fill-slate-400" : "fill-slate-900 dark:fill-slate-100"}
         style={{ pointerEvents: 'none', userSelect: 'none' }}
       >
         {name.length > 18 ? name.slice(0, 17) + '…' : name}
@@ -163,7 +161,7 @@ function CustomNode({ nodeDatum, onNodeClick, toggleNode }) {
           textAnchor="middle"
           y={r + 29}
           fontSize={9}
-          fill="#64748b"
+          className="fill-slate-500 dark:fill-slate-400"
           style={{ pointerEvents: 'none', userSelect: 'none' }}
         >
           {lifespan}
@@ -187,46 +185,46 @@ function MemberPanel({ persons, personId, treeId, onClose, navigate }) {
 
   return (
     <div className="absolute top-4 right-4 w-72 z-10 animate-fade-in">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+      <div className="bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-brand-900/80 to-slate-900 p-4 flex items-center gap-3">
           {person.profile_photo ? (
             <img
               src={person.profile_photo}
               alt={person.full_name}
-              className={`w-12 h-12 rounded-full object-cover ring-2 ring-slate-700 flex-shrink-0 ${person.is_deceased ? 'grayscale opacity-70' : ''}`}
+              className={`w-12 h-12 rounded-full object-cover ring-2 ring-slate-300 dark:ring-slate-700 flex-shrink-0 ${person.is_deceased ? 'grayscale opacity-70' : ''}`}
             />
           ) : (
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 ${person.is_deceased ? 'bg-slate-600' : 'bg-brand-700'}`}>
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-slate-900 dark:text-white font-bold flex-shrink-0 ${person.is_deceased ? 'bg-slate-300 dark:bg-slate-600' : 'bg-brand-700'}`}>
               {initials}
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-white text-sm leading-tight">{person.full_name}</p>
-            {person.nickname && <p className="text-slate-400 text-xs italic">"{person.nickname}"</p>}
+            <p className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{person.full_name}</p>
+            {person.nickname && <p className="text-slate-600 dark:text-slate-400 text-xs italic">"{person.nickname}"</p>}
             {person.is_deceased && (
-              <span className="badge bg-slate-800 text-slate-400 border border-slate-700 text-[10px] mt-0.5">† Deceased</span>
+              <span className="badge bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700 text-[10px] mt-0.5">† Deceased</span>
             )}
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors text-lg leading-none ml-1">×</button>
+          <button onClick={onClose} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors text-lg leading-none ml-1">×</button>
         </div>
 
         {/* Details */}
         <div className="p-4 space-y-2 text-xs">
           {person.occupation && (
-            <p className="text-slate-400"><span className="text-slate-600">💼</span> {person.occupation}</p>
+            <p className="text-slate-600 dark:text-slate-400"><span className="text-slate-600">💼</span> {person.occupation}</p>
           )}
           {person.birth_date && (
-            <p className="text-slate-400"><span className="text-slate-600">🎂</span> {person.birth_date}</p>
+            <p className="text-slate-600 dark:text-slate-400"><span className="text-slate-600">🎂</span> {person.birth_date}</p>
           )}
           {person.birth_place && (
-            <p className="text-slate-400"><span className="text-slate-600">📍</span> {person.birth_place}</p>
+            <p className="text-slate-600 dark:text-slate-400"><span className="text-slate-600">📍</span> {person.birth_place}</p>
           )}
           {person.death_date && (
-            <p className="text-slate-400"><span className="text-slate-600">🕊️</span> {person.death_date}</p>
+            <p className="text-slate-600 dark:text-slate-400"><span className="text-slate-600">🕊️</span> {person.death_date}</p>
           )}
           {person.biography && (
-            <p className="text-slate-500 line-clamp-3 leading-relaxed mt-1">{person.biography}</p>
+            <p className="text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed mt-1">{person.biography}</p>
           )}
         </div>
 
@@ -258,7 +256,7 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
     setExporting(true);
     try {
       const canvas = await html2canvas(containerRef.current, {
-        backgroundColor: '#020617', // slate-950
+        backgroundColor: '#ffffff', // clear/white background requested by user
         scale: 2,
         useCORS: true,
       });
@@ -275,7 +273,7 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
     return (
       <div className="flex flex-col items-center justify-center h-96 space-y-3 text-center">
         <div className="text-5xl">🌱</div>
-        <p className="text-slate-400 text-sm">Add members to see the family tree</p>
+        <p className="text-slate-600 dark:text-slate-400 text-sm">Add members to see the family tree</p>
       </div>
     );
   }
@@ -304,8 +302,8 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
       {/* Tree canvas */}
       <div
         ref={containerRef}
-        className="w-full rounded-2xl overflow-hidden border border-slate-800"
-        style={{ height: '520px', background: '#0f172a' }}
+        className="w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900"
+        style={{ height: '520px' }}
         id="tree-canvas"
       >
         <Tree
@@ -325,7 +323,7 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
               onNodeClick={setSelectedPersonId}
             />
           )}
-          pathClassFunc={() => 'stroke-slate-700 stroke-[1.5px] fill-none'}
+          pathClassFunc={() => 'stroke-slate-300 dark:stroke-slate-700 stroke-[1.5px] fill-none'}
           collapsible={true}
           zoomable={true}
           draggable={true}

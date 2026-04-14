@@ -124,7 +124,7 @@ export default function EditMember() {
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
     </div>
   );
@@ -133,16 +133,16 @@ export default function EditMember() {
     .split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-xl mx-auto px-4 py-10">
         <Link to={`/trees/${treeId}/members/${memberId}`}
-          className="text-slate-500 hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
           ← Back to Profile
         </Link>
 
-        <h1 className="text-2xl font-bold text-white mt-2 mb-1">Edit Member</h1>
-        <p className="text-slate-500 text-sm mb-8">Update this person's information.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Edit Member</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Update this person's information.</p>
 
         {serverError && (
           <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
@@ -155,17 +155,17 @@ export default function EditMember() {
 
             {/* ── Profile Photo ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Profile Photo</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Profile Photo</h2>
               <div className="flex items-center gap-4">
                 <div className="relative flex-shrink-0">
                   {photoPreview ? (
                     <img
                       src={photoPreview}
                       alt="Profile"
-                      className="w-20 h-20 rounded-2xl object-cover ring-2 ring-slate-700"
+                      className="w-20 h-20 rounded-2xl object-cover ring-2 ring-slate-300 dark:ring-slate-700"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-2xl bg-brand-700 flex items-center justify-center text-white font-bold text-xl">
+                    <div className="w-20 h-20 rounded-2xl bg-brand-700 flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl">
                       {initials}
                     </div>
                   )}
@@ -173,7 +173,7 @@ export default function EditMember() {
                     <button
                       type="button"
                       onClick={() => { setPhotoFile(null); setPhotoPreview(null); setForm(f => ({ ...f, profile_photo: '' })); }}
-                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 text-white rounded-full text-xs flex items-center justify-center leading-none hover:bg-red-500"
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 text-slate-900 dark:text-white rounded-full text-xs flex items-center justify-center leading-none hover:bg-red-500"
                     >×</button>
                   )}
                 </div>
@@ -193,7 +193,7 @@ export default function EditMember() {
 
             {/* ── Basic Info ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Basic Info</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Basic Info</h2>
               <div>
                 <label className="label">Full Name *</label>
                 <input id="editFullName" type="text" className="input" value={form.full_name} onChange={change('full_name')} />
@@ -225,7 +225,7 @@ export default function EditMember() {
               <div className="flex items-center gap-3">
                 <input id="editIsDeceased" type="checkbox" className="w-4 h-4 accent-brand-500"
                   checked={form.is_deceased} onChange={change('is_deceased')} />
-                <label htmlFor="editIsDeceased" className="text-slate-400 text-sm select-none cursor-pointer">
+                <label htmlFor="editIsDeceased" className="text-slate-600 dark:text-slate-400 text-sm select-none cursor-pointer">
                   Mark as deceased
                 </label>
               </div>
@@ -239,7 +239,7 @@ export default function EditMember() {
 
             {/* ── Contact ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Contact & Location</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Contact & Location</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="label">Email</label>
@@ -258,7 +258,7 @@ export default function EditMember() {
 
             {/* ── Personal Background ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Personal Background</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Personal Background</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="label">Occupation</label>
@@ -302,7 +302,7 @@ export default function EditMember() {
 
             {/* ── Social Links ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide">Social Media</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Social Media</h2>
               {SOCIAL_PLATFORMS.map((p) => (
                 <div key={p.key}>
                   <label className="label">

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
+import { ThemeProvider } from './hooks/useTheme';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Auth pages
@@ -22,7 +23,8 @@ import Settings from './pages/Settings';
 
 export default function App() {
   return (
-    <AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           {/* Root redirect */}
@@ -68,6 +70,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

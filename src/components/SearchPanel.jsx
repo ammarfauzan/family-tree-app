@@ -168,7 +168,7 @@ export function SearchPanel({ persons, relationships, treeId }) {
 
       {/* Filter row */}
       {showFilters && (
-        <div className="flex gap-3 flex-wrap p-3 rounded-xl bg-slate-900 border border-slate-800">
+        <div className="flex gap-3 flex-wrap p-3 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
           <div>
             <label className="label text-[10px]">Gender</label>
             <select
@@ -201,7 +201,7 @@ export function SearchPanel({ persons, relationships, treeId }) {
             <div className="flex items-end">
               <button
                 onClick={() => { setFilterGender('all'); setFilterStatus('all'); }}
-                className="text-xs text-slate-500 hover:text-red-400 transition-colors"
+                className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-400 transition-colors"
               >
                 ✕ Clear filters
               </button>
@@ -212,10 +212,10 @@ export function SearchPanel({ persons, relationships, treeId }) {
 
       {/* Find My Relation panel */}
       {showFinder && (
-        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-4">
+        <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
           <div>
-            <h3 className="text-sm font-semibold text-white mb-0.5">🔍 Find My Relation</h3>
-            <p className="text-slate-500 text-xs">Discover the relationship path between any two family members.</p>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">🔍 Find My Relation</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-xs">Discover the relationship path between any two family members.</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -264,7 +264,7 @@ export function SearchPanel({ persons, relationships, treeId }) {
           )}
           {pathResult && pathResult.length > 0 && (
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Relationship Path</p>
+              <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Relationship Path</p>
               <div className="flex flex-wrap items-center gap-2">
                 {pathResult.map((step, i) => (
                   <span key={step.personId} className="flex items-center gap-2">
@@ -275,7 +275,7 @@ export function SearchPanel({ persons, relationships, treeId }) {
                       {step.name}
                     </button>
                     {i < pathResult.length - 1 && (
-                      <span className="text-slate-500 text-xs flex items-center gap-1">
+                      <span className="text-slate-500 dark:text-slate-400 text-xs flex items-center gap-1">
                         <span className="text-slate-600">→</span>
                         <span className="italic">{pathResult[i + 1].via}</span>
                         <span className="text-slate-600">→</span>
@@ -284,7 +284,7 @@ export function SearchPanel({ persons, relationships, treeId }) {
                   </span>
                 ))}
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {pathResult.length - 1} {pathResult.length - 1 === 1 ? 'step' : 'steps'} apart
               </p>
             </div>
@@ -294,9 +294,9 @@ export function SearchPanel({ persons, relationships, treeId }) {
 
       {/* Result count */}
       {(query || activeFilters) && (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           {filtered.length} of {persons.length} members
-          {query && <span> matching "<strong className="text-slate-300">{query}</strong>"</span>}
+          {query && <span> matching "<strong className="text-slate-700 dark:text-slate-300">{query}</strong>"</span>}
         </p>
       )}
     </div>

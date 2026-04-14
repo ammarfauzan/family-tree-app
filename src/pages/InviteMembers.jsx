@@ -8,8 +8,8 @@ function roleBadge(role) {
   const map = {
     owner: 'bg-amber-900/50 text-amber-300 border-amber-700',
     admin: 'bg-brand-900/50 text-brand-300 border-brand-800',
-    member: 'bg-slate-700 text-slate-300 border-slate-600',
-    viewer: 'bg-slate-800 text-slate-500 border-slate-700',
+    member: 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-400 dark:border-slate-600',
+    viewer: 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-700',
   };
   return map[role] || map.member;
 }
@@ -91,25 +91,25 @@ export default function InviteMembers() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-3xl mx-auto px-4 py-10">
         <Link
           to={`/trees/${treeId}`}
-          className="text-slate-500 hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1"
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1"
         >
           ← Back to Tree
         </Link>
 
         <div className="flex items-center justify-between mt-2 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-white">Invite & Members</h1>
-            <p className="text-slate-500 text-sm mt-0.5">Manage who has access to this tree.</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Invite & Members</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Manage who has access to this tree.</p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-slate-900 rounded-xl mb-6 w-fit border border-slate-800">
+        <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl mb-6 w-fit border border-slate-200 dark:border-slate-800">
           {[
             { id: 'invite', label: '🔗 Invite Links' },
             { id: 'members', label: '👥 Members' },
@@ -119,8 +119,8 @@ export default function InviteMembers() {
               onClick={() => setTab(t.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 tab === t.id
-                  ? 'bg-brand-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-brand-600 text-slate-900 dark:text-white shadow'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white'
               }`}
             >
               {t.label}
@@ -136,7 +136,7 @@ export default function InviteMembers() {
           <div className="space-y-6">
             {/* Create invite form */}
             <div className="card space-y-4">
-              <h2 className="text-base font-semibold text-white">Generate Invite Link</h2>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Generate Invite Link</h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -180,12 +180,12 @@ export default function InviteMembers() {
 
             {/* Active invites */}
             {invites.length === 0 ? (
-              <div className="text-center py-12 text-slate-500 text-sm">
+              <div className="text-center py-12 text-slate-500 dark:text-slate-400 text-sm">
                 No invite links yet. Generate one above.
               </div>
             ) : (
               <div className="space-y-3">
-                <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide">Active Links</h2>
+                <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Active Links</h2>
                 {invites.map((inv) => (
                   <div
                     key={inv.id}
@@ -198,13 +198,13 @@ export default function InviteMembers() {
                           inv.status === 'accepted'
                             ? 'bg-green-900/40 text-green-400 border-green-800'
                             : inv.status === 'expired'
-                            ? 'bg-slate-800 text-slate-500 border-slate-700'
-                            : 'bg-slate-800 text-slate-400 border-slate-700'
+                            ? 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-700'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700'
                         }`}>
                           {inv.status}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 font-mono truncate">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">
                         {inviteLink(inv.token)}
                       </p>
                       <p className="text-xs text-slate-600 mt-0.5">
@@ -238,18 +238,18 @@ export default function InviteMembers() {
           /* Members tab */
           <div className="space-y-3">
             {treeMembers.length === 0 ? (
-              <p className="text-center text-slate-500 text-sm py-12">No members found.</p>
+              <p className="text-center text-slate-500 dark:text-slate-400 text-sm py-12">No members found.</p>
             ) : (
               treeMembers.map((member) => (
                 <div key={member.id} className="card flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center text-slate-900 dark:text-white font-bold text-sm flex-shrink-0">
                     {(member.profiles?.full_name || '?').charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-100 text-sm">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
                       {member.profiles?.full_name || 'Unknown User'}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Joined {new Date(member.joined_at).toLocaleDateString()}
                     </p>
                   </div>
@@ -258,7 +258,7 @@ export default function InviteMembers() {
                     {member.role !== 'owner' && (
                       <button
                         onClick={() => handleRemoveMember(member)}
-                        className="text-slate-500 hover:text-red-400 text-xs transition-colors px-2 py-1"
+                        className="text-slate-500 dark:text-slate-400 hover:text-red-400 text-xs transition-colors px-2 py-1"
                       >
                         Remove
                       </button>

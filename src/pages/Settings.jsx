@@ -140,18 +140,18 @@ export default function Settings() {
   const connectedProviders = user?.app_metadata?.providers || [user?.app_metadata?.provider].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-10">
-        <h1 className="text-2xl font-bold text-white mb-1">Account Settings</h1>
-        <p className="text-slate-500 text-sm mb-8">Manage your profile, security, and sessions.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Account Settings</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Manage your profile, security, and sessions.</p>
 
         <div className="space-y-5">
 
           {/* ── Profile ── */}
           <div className="card space-y-4">
-            <h2 className="text-base font-semibold text-white">Profile</h2>
-            <p className="text-slate-500 text-xs">{user?.email}</p>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Profile</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-xs">{user?.email}</p>
             <form onSubmit={handleSaveName} className="flex gap-3">
               <input
                 id="settingsDisplayName"
@@ -170,7 +170,7 @@ export default function Settings() {
           {/* ── Email ── */}
           {!isOAuthUser && (
             <div className="card space-y-4">
-              <h2 className="text-base font-semibold text-white">Change Email</h2>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Change Email</h2>
               <form onSubmit={handleUpdateEmail} className="space-y-3">
                 <input
                   id="settingsNewEmail"
@@ -195,7 +195,7 @@ export default function Settings() {
           {/* ── Password ── */}
           {!isOAuthUser && (
             <div className="card space-y-4">
-              <h2 className="text-base font-semibold text-white">Change Password</h2>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Change Password</h2>
               <form onSubmit={handleUpdatePassword} className="space-y-3">
                 <input
                   id="settingsNewPw"
@@ -227,12 +227,12 @@ export default function Settings() {
 
           {/* ── Connected Accounts ── */}
           <div className="card space-y-4">
-            <h2 className="text-base font-semibold text-white">Connected Accounts</h2>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Connected Accounts</h2>
             <div className="space-y-2">
               {connectedProviders.map((p) => (
-                <div key={p} className="flex items-center gap-3 p-3 rounded-xl bg-slate-800 border border-slate-700">
+                <div key={p} className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
                   <span className="text-lg">{p === 'google' ? '🔵' : p === 'facebook' ? '🔷' : '📧'}</span>
-                  <span className="text-slate-200 text-sm capitalize">{p}</span>
+                  <span className="text-slate-800 dark:text-slate-200 text-sm capitalize">{p}</span>
                   <span className="ml-auto badge bg-green-900/40 text-green-400 border border-green-800">Connected</span>
                 </div>
               ))}
@@ -252,8 +252,8 @@ export default function Settings() {
           {/* ── MFA ── */}
           <div className="card space-y-4">
             <div>
-              <h2 className="text-base font-semibold text-white">Two-Factor Authentication (TOTP)</h2>
-              <p className="text-slate-500 text-xs mt-0.5">Add an extra layer of security using an authenticator app.</p>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Two-Factor Authentication (TOTP)</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Add an extra layer of security using an authenticator app.</p>
             </div>
 
             {mfaMsg && (
@@ -276,13 +276,13 @@ export default function Settings() {
               </div>
             ) : mfaEnrollData ? (
               <div className="space-y-4">
-                <p className="text-slate-400 text-sm">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
                 <div className="bg-white p-3 rounded-xl w-fit mx-auto">
                   <img src={mfaEnrollData.totp.qr_code} alt="MFA QR Code" className="w-40 h-40" />
                 </div>
                 <div className="text-center">
-                  <p className="text-slate-500 text-xs mb-1">Or enter this secret manually:</p>
-                  <code className="text-slate-300 text-xs bg-slate-800 px-3 py-1 rounded-lg select-all">
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mb-1">Or enter this secret manually:</p>
+                  <code className="text-slate-700 dark:text-slate-300 text-xs bg-white dark:bg-slate-800 px-3 py-1 rounded-lg select-all">
                     {mfaEnrollData.totp.secret}
                   </code>
                 </div>
@@ -317,11 +317,11 @@ export default function Settings() {
 
           {/* ── Sessions ── */}
           <div className="card space-y-4">
-            <h2 className="text-base font-semibold text-white">Sessions</h2>
-            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-sm">
-              <p className="text-slate-300 font-medium">Current Session</p>
-              <p className="text-slate-500 text-xs mt-0.5">Started: {sessionCreated}</p>
-              <p className="text-slate-500 text-xs">Email: {user?.email}</p>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Sessions</h2>
+            <div className="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm">
+              <p className="text-slate-700 dark:text-slate-300 font-medium">Current Session</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Started: {sessionCreated}</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs">Email: {user?.email}</p>
             </div>
             <button
               id="signOutAllBtn"

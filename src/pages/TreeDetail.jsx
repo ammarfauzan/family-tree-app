@@ -44,10 +44,10 @@ export default function TreeDetail() {
   }, [treeId]);
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-5xl mx-auto px-4 py-10">
-        <Link to="/dashboard" className="text-slate-500 hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+        <Link to="/dashboard" className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
           ← Dashboard
         </Link>
 
@@ -68,9 +68,9 @@ export default function TreeDetail() {
             {/* Tree Header */}
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 mt-2">
               <div>
-                <h1 className="text-3xl font-bold text-white">{tree.name}</h1>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{tree.name}</h1>
                 {tree.description && (
-                  <p className="text-slate-400 text-sm mt-1">{tree.description}</p>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">{tree.description}</p>
                 )}
                 <p className="text-xs text-slate-600 mt-1">
                   {members.length} member{members.length !== 1 ? 's' : ''}
@@ -96,7 +96,7 @@ export default function TreeDetail() {
             </div>
 
             {/* View toggle */}
-            <div className="flex gap-1 p-1 bg-slate-900 rounded-xl mb-6 w-fit border border-slate-800">
+            <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl mb-6 w-fit border border-slate-200 dark:border-slate-800">
               {[
                 { id: 'list', label: '☰ List' },
                 { id: 'tree', label: '🌳 Tree View' },
@@ -106,8 +106,8 @@ export default function TreeDetail() {
                   onClick={() => setView(v.id)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     view === v.id
-                      ? 'bg-brand-600 text-white shadow'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-brand-600 text-slate-900 dark:text-white shadow'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white'
                   }`}
                 >
                   {v.label}
@@ -144,8 +144,8 @@ export default function TreeDetail() {
                 {members.length === 0 ? (
                   <div className="text-center py-20 space-y-3">
                     <div className="text-5xl">👤</div>
-                    <h2 className="text-lg font-semibold text-white">No members yet</h2>
-                    <p className="text-slate-500 text-sm">Add the first person to this tree</p>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">No members yet</h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Add the first person to this tree</p>
                     <button
                       onClick={() => navigate(`/trees/${treeId}/members/new`)}
                       className="btn-primary"

@@ -18,7 +18,7 @@ function NotifMessage({ type, payload }) {
   if (type === 'profile_updated') {
     return (
       <span>
-        Your profile <strong className="text-white">{person_name && `(${person_name})`}</strong> was updated by another member.{' '}
+        Your profile <strong className="text-slate-900 dark:text-white">{person_name && `(${person_name})`}</strong> was updated by another member.{' '}
         {tree_id && person_id && (
           <Link
             to={`/trees/${tree_id}/members/${person_id}`}
@@ -45,11 +45,11 @@ function NotifMessage({ type, payload }) {
   if (type === 'birthday_reminder') {
     return (
       <span>
-        🎂 Birthday reminder: <strong className="text-white">{person_name}</strong>
+        🎂 Birthday reminder: <strong className="text-slate-900 dark:text-white">{person_name}</strong>
       </span>
     );
   }
-  return <span className="text-slate-400">New notification</span>;
+  return <span className="text-slate-600 dark:text-slate-400">New notification</span>;
 }
 
 export default function Notifications() {
@@ -77,13 +77,13 @@ export default function Notifications() {
   const unread = notifications.filter((n) => !n.is_read);
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-white">Notifications</h1>
-            <p className="text-slate-500 text-sm mt-0.5">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Notifications</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">
               {unread.length > 0 ? `${unread.length} unread` : 'All caught up!'}
             </p>
           </div>
@@ -96,19 +96,19 @@ export default function Notifications() {
         ) : notifications.length === 0 ? (
           <div className="text-center py-20 space-y-3">
             <div className="text-5xl">🔔</div>
-            <h2 className="text-lg font-semibold text-white">No notifications yet</h2>
-            <p className="text-slate-500 text-sm">We'll let you know when something happens.</p>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">No notifications yet</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">We'll let you know when something happens.</p>
           </div>
         ) : (
           <div className="space-y-2">
             {notifications.map((n) => {
-              const meta = NOTIF_META[n.type] || { icon: '🔔', label: 'Notification', color: 'text-slate-400' };
+              const meta = NOTIF_META[n.type] || { icon: '🔔', label: 'Notification', color: 'text-slate-600 dark:text-slate-400' };
               const payload = n.payload || {};
               return (
                 <div
                   key={n.id}
                   className={`card flex items-start gap-4 transition-all ${
-                    !n.is_read ? 'border-brand-800 bg-slate-900/80' : 'opacity-70'
+                    !n.is_read ? 'border-brand-800 bg-slate-100 dark:bg-slate-900/80' : 'opacity-70'
                   }`}
                 >
                   {/* Icon */}
@@ -124,7 +124,7 @@ export default function Notifications() {
                         <span className="w-2 h-2 rounded-full bg-brand-500 flex-shrink-0" />
                       )}
                     </div>
-                    <p className="text-slate-300 text-sm leading-relaxed">
+                    <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
                       <NotifMessage type={n.type} payload={payload} />
                     </p>
                     <p className="text-slate-600 text-xs mt-1">

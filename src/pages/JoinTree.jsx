@@ -61,7 +61,7 @@ export default function JoinTree() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-brand-950 flex flex-col items-center justify-center px-4 py-12">
       <Link to="/" className="flex items-center gap-2 mb-8">
         <span className="text-3xl">🌳</span>
-        <span className="text-xl font-bold text-white">FamilyTree</span>
+        <span className="text-xl font-bold text-slate-900 dark:text-white">FamilyTree</span>
       </Link>
 
       <div className="card w-full max-w-md">
@@ -74,7 +74,7 @@ export default function JoinTree() {
         {!loading && error && (
           <div className="text-center space-y-4 py-4">
             <div className="text-5xl">🔗</div>
-            <h1 className="text-xl font-bold text-white">Invalid Invitation</h1>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Invalid Invitation</h1>
             <p className="text-red-400 text-sm">{error}</p>
             <Link to="/dashboard" className="btn-secondary inline-flex">Go to Dashboard</Link>
           </div>
@@ -83,8 +83,8 @@ export default function JoinTree() {
         {!loading && !error && joined && (
           <div className="text-center space-y-4 py-4">
             <div className="text-5xl">🎉</div>
-            <h1 className="text-2xl font-bold text-white">You're in!</h1>
-            <p className="text-slate-400 text-sm">Welcome to <strong className="text-white">{invite?.tree_name}</strong>. Redirecting…</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">You're in!</h1>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Welcome to <strong className="text-slate-900 dark:text-white">{invite?.tree_name}</strong>. Redirecting…</p>
             <div className="w-6 h-6 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         )}
@@ -93,12 +93,12 @@ export default function JoinTree() {
           <>
             <div className="text-center mb-6">
               <div className="text-5xl mb-3">🌳</div>
-              <h1 className="text-2xl font-bold text-white mb-1">You're Invited!</h1>
-              <p className="text-slate-400 text-sm">You've been invited to join the family tree:</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">You're Invited!</h1>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">You've been invited to join the family tree:</p>
               <p className="text-brand-300 font-semibold text-lg mt-2">{invite.tree_name}</p>
               {invite.person_name && (
-                <p className="text-slate-500 text-xs mt-1">
-                  You'll be linked to the profile: <span className="text-slate-300">{invite.person_name}</span>
+                <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
+                  You'll be linked to the profile: <span className="text-slate-700 dark:text-slate-300">{invite.person_name}</span>
                 </p>
               )}
               <span className="badge bg-brand-900/50 text-brand-300 border border-brand-800 mt-3 inline-flex">
@@ -108,7 +108,7 @@ export default function JoinTree() {
 
             {!user ? (
               <div className="space-y-3">
-                <p className="text-slate-500 text-sm text-center">Sign in or create an account to accept this invitation.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm text-center">Sign in or create an account to accept this invitation.</p>
                 <button
                   id="joinSignInBtn"
                   onClick={() => navigate(`/sign-in?redirect=${encodeURIComponent(window.location.href)}`)}

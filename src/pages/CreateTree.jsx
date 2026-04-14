@@ -82,15 +82,15 @@ export default function CreateTree() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-xl mx-auto px-4 py-10">
-        <Link to="/dashboard" className="text-slate-500 hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+        <Link to="/dashboard" className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
           ← Back to Dashboard
         </Link>
 
-        <h1 className="text-2xl font-bold text-white mt-2 mb-1">Create a New Tree</h1>
-        <p className="text-slate-500 text-sm mb-8">Give your family tree a name and get started.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Create a New Tree</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Give your family tree a name and get started.</p>
 
         {serverError && (
           <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
@@ -127,12 +127,12 @@ export default function CreateTree() {
           <div>
             <label className="label">Cover Photo</label>
             {coverPreview ? (
-              <div className="relative rounded-xl overflow-hidden h-36 bg-slate-800">
+              <div className="relative rounded-xl overflow-hidden h-36 bg-white dark:bg-slate-800">
                 <img src={coverPreview} alt="Cover preview" className="w-full h-full object-cover" />
                 <button
                   type="button"
                   onClick={removeCover}
-                  className="absolute top-2 right-2 bg-slate-900/80 hover:bg-red-900/80 text-white rounded-lg px-2 py-1 text-xs transition-colors"
+                  className="absolute top-2 right-2 bg-slate-100 dark:bg-slate-900/80 hover:bg-red-900/80 text-slate-900 dark:text-white rounded-lg px-2 py-1 text-xs transition-colors"
                 >
                   ✕ Remove
                 </button>
@@ -141,7 +141,7 @@ export default function CreateTree() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full h-28 rounded-xl border-2 border-dashed border-slate-700 hover:border-brand-600 flex flex-col items-center justify-center gap-2 text-slate-500 hover:text-brand-400 transition-colors cursor-pointer"
+                className="w-full h-28 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-600 flex flex-col items-center justify-center gap-2 text-slate-500 dark:text-slate-400 hover:text-brand-400 transition-colors cursor-pointer"
               >
                 <span className="text-2xl">🖼️</span>
                 <span className="text-xs">Click to upload a cover photo</span>

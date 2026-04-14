@@ -7,7 +7,7 @@ function privacyBadge(privacy) {
   const map = {
     public: 'bg-green-900/50 text-green-400 border border-green-800',
     family_only: 'bg-brand-900/50 text-brand-300 border border-brand-800',
-    private: 'bg-slate-700 text-slate-300 border border-slate-600',
+    private: 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-400 dark:border-slate-600',
   };
   return map[privacy] || map.private;
 }
@@ -41,14 +41,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 py-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">My Family Trees</h1>
-            <p className="text-slate-500 text-sm mt-1">Manage and explore your family genealogy</p>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">My Family Trees</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Manage and explore your family genealogy</p>
           </div>
           <Link to="/trees/new" className="btn-primary">
             + New Tree
@@ -71,8 +71,8 @@ export default function Dashboard() {
         {!loading && !error && trees.length === 0 && (
           <div className="text-center py-24 space-y-4">
             <div className="text-6xl">🌱</div>
-            <h2 className="text-xl font-semibold text-white">No trees yet</h2>
-            <p className="text-slate-500 text-sm">Start by creating your first family tree</p>
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">No trees yet</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Start by creating your first family tree</p>
             <Link to="/trees/new" className="btn-primary inline-flex">Create a Tree</Link>
           </div>
         )}
@@ -100,7 +100,7 @@ export default function Dashboard() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <h2
-                      className="font-semibold text-white text-base truncate cursor-pointer group-hover:text-brand-300 transition-colors"
+                      className="font-semibold text-slate-900 dark:text-white text-base truncate cursor-pointer group-hover:text-brand-300 transition-colors"
                       onClick={() => navigate(`/trees/${tree.id}`)}
                     >
                       {tree.name}
@@ -110,7 +110,7 @@ export default function Dashboard() {
                     </span>
                   </div>
                   {tree.description && (
-                    <p className="text-slate-500 text-xs mt-1 line-clamp-2">{tree.description}</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-1 line-clamp-2">{tree.description}</p>
                   )}
                 </div>
 
