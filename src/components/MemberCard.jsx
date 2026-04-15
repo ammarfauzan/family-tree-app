@@ -3,14 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export const MemberCard = memo(function MemberCard({ member, treeId }) {
   const navigate = useNavigate();
-  const initials = member.full_name
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-
   const deceased = member.is_deceased;
+  const avatarSeed = encodeURIComponent(member.full_name);
+  const dicebearUrl = `https://api.dicebear.com/8.x/fun-emoji/svg?seed=${avatarSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 
   return (
     <button
@@ -28,17 +23,17 @@ export const MemberCard = memo(function MemberCard({ member, treeId }) {
           src={member.profile_photo}
           alt={member.full_name}
           className={`w-12 h-12 rounded-full object-cover ring-2 flex-shrink-0 ${
-            deceased ? 'ring-slate-600 grayscale' : 'ring-slate-700'
+            deceased ? 'ring-slate-300 dark:ring-slate-600 grayscale' : 'ring-slate-300 dark:ring-slate-700'
           }`}
         />
       ) : (
-        <div
-          className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${
-            deceased ? 'bg-slate-600' : 'bg-brand-700'
+        <img
+          src={dicebearUrl}
+          alt={member.full_name}
+          className={`w-12 h-12 rounded-full object-cover ring-2 flex-shrink-0 bg-slate-100 dark:bg-slate-700 ${
+            deceased ? 'ring-slate-300 dark:ring-slate-600 grayscale opacity-70' : 'ring-slate-300 dark:ring-slate-700'
           }`}
-        >
-          {initials}
-        </div>
+        />
       )}
 
       {/* Info */}

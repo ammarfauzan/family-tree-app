@@ -20,6 +20,7 @@ import InviteMembers from './pages/InviteMembers';
 import JoinTree from './pages/JoinTree';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
+import Landing from './pages/Landing';
 
 export default function App() {
   return (
@@ -27,8 +28,8 @@ export default function App() {
       <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Root redirect */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Root: Landing page */}
+          <Route path="/" element={<Landing />} />
 
           {/* Auth (public) */}
           <Route path="/sign-up" element={<SignUp />} />

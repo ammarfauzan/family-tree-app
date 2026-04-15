@@ -91,8 +91,7 @@ export default function MemberProfile() {
     );
   }
 
-  const initials = member?.full_name
-    .split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+
 
   const socialLinks = member?.social_links || {};
   const hasSocials = Object.values(socialLinks).some(Boolean);
@@ -124,9 +123,11 @@ export default function MemberProfile() {
                   <img src={member.profile_photo} alt={member.full_name}
                     className={`w-24 h-24 rounded-2xl object-cover ring-2 ring-slate-300 dark:ring-slate-700 ${member.is_deceased ? 'grayscale opacity-80' : ''}`} />
                 ) : (
-                  <div className={`w-24 h-24 rounded-2xl flex items-center justify-center text-slate-900 dark:text-white font-bold text-2xl ${member.is_deceased ? 'bg-slate-300 dark:bg-slate-600' : 'bg-brand-700'}`}>
-                    {initials}
-                  </div>
+                  <img
+                    src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${encodeURIComponent(member.full_name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
+                    alt={member.full_name}
+                    className={`w-24 h-24 rounded-2xl object-cover ring-2 ring-slate-300 dark:ring-slate-700 bg-slate-100 dark:bg-slate-700 ${member.is_deceased ? 'grayscale opacity-80' : ''}`}
+                  />
                 )}
               </div>
               <div className="flex-1 min-w-0">

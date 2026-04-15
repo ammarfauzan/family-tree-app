@@ -8,7 +8,8 @@ export default function CreateTree() {
   const { createTree } = useTree();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ name: '', description: '', privacy: 'family_only' });
+  const SYMBOLS = ['🌳', '🌲', '🌴', '🌺', '🌸', '🪴', '🌵', '🏡', '🕌', '🌙', '⭐', '🦅', '🦁', '🐉', '💎', '🏔️'];
+  const [form, setForm] = useState({ name: '', description: '', privacy: 'family_only', symbol: '🌳' });
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(false);
@@ -121,6 +122,29 @@ export default function CreateTree() {
               value={form.description}
               onChange={change('description')}
             />
+          </div>
+
+          {/* Symbol Picker */}
+          <div>
+            <label className="label">Tree Symbol</label>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Choose an emoji to represent your family tree</p>
+            <div className="grid grid-cols-8 gap-2">
+              {SYMBOLS.map((sym) => (
+                <button
+                  key={sym}
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, symbol: sym }))}
+                  className={`h-10 w-full rounded-xl text-2xl flex items-center justify-center transition-all border-2 ${
+                    form.symbol === sym
+                      ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/30 scale-110'
+                      : 'border-slate-200 dark:border-slate-700 hover:border-brand-400 hover:scale-105'
+                  }`}
+                >
+                  {sym}
+                </button>
+              ))}
+            </div>
+            <p className="text-center text-3xl mt-3">Selected: {form.symbol}</p>
           </div>
 
           {/* Cover Photo */}

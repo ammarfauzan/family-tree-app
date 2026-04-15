@@ -10,7 +10,7 @@ export function useTree() {
       .select(`
         role,
         family_trees (
-          id, name, description, privacy, cover_photo, owner_id, created_at
+          id, name, description, privacy, cover_photo, owner_id, symbol, created_at
         )
       `)
       .eq('user_id', user.id)
@@ -20,11 +20,11 @@ export function useTree() {
     return data.map((row) => ({ ...row.family_trees, role: row.role }));
   }
 
-  async function createTree({ name, description, privacy }) {
+  async function createTree({ name, description, privacy, symbol = '🌳' }) {
     // Insert tree
     const { data: tree, error: treeError } = await supabase
       .from('family_trees')
-      .insert({ name, description, privacy, owner_id: user.id })
+      .insert({ name, description, privacy, symbol, owner_id: user.id })
       .select()
       .single();
 

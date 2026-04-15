@@ -86,13 +86,13 @@ export default function Dashboard() {
               >
                 {/* Cover */}
                 <div
-                  className="h-28 rounded-xl bg-gradient-to-br from-brand-800 to-slate-800 flex items-center justify-center overflow-hidden cursor-pointer"
+                  className="h-28 rounded-xl bg-gradient-to-br from-brand-800 to-slate-800 flex items-center justify-center overflow-hidden cursor-pointer relative"
                   onClick={() => navigate(`/trees/${tree.id}`)}
                 >
                   {tree.cover_photo ? (
                     <img src={tree.cover_photo} alt={tree.name} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-5xl opacity-40">🌳</span>
+                    <span className="text-6xl">{tree.symbol || '🌳'}</span>
                   )}
                 </div>
 
@@ -100,9 +100,10 @@ export default function Dashboard() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <h2
-                      className="font-semibold text-slate-900 dark:text-white text-base truncate cursor-pointer group-hover:text-brand-300 transition-colors"
+                      className="font-semibold text-slate-900 dark:text-white text-base truncate cursor-pointer group-hover:text-brand-300 transition-colors flex items-center gap-2"
                       onClick={() => navigate(`/trees/${tree.id}`)}
                     >
+                      {!tree.cover_photo && <span className="text-base">{tree.symbol || '🌳'}</span>}
                       {tree.name}
                     </h2>
                     <span className={`badge flex-shrink-0 ${privacyBadge(tree.privacy)}`}>
