@@ -54,22 +54,22 @@ export function useMembers() {
           sibling: 'sibling',
         }[rel.relationType];
 
-        // Forward: relatedTo → new person
+        // Forward: new person is relationType to relatedTo
         const { error: relError } = await supabase.from('relationships').insert({
           tree_id: treeId,
-          person_a_id: rel.relatedToId,
-          person_b_id: person.id,
+          person_a_id: person.id,
+          person_b_id: rel.relatedToId,
           relation_type: rel.relationType,
           relation_note: rel.relationNote || null,
           created_by: user.id,
         });
         if (relError) throw relError;
 
-        // Inverse: new person → relatedTo
+        // Inverse: relatedTo is inverseType to new person
         const { error: invError } = await supabase.from('relationships').insert({
           tree_id: treeId,
-          person_a_id: person.id,
-          person_b_id: rel.relatedToId,
+          person_a_id: rel.relatedToId,
+          person_b_id: person.id,
           relation_type: inverseType,
           relation_note: rel.relationNote || null,
           created_by: user.id,
