@@ -124,7 +124,7 @@ export default function MemberProfile() {
                     className={`w-24 h-24 rounded-2xl object-cover ring-2 ring-slate-300 dark:ring-slate-700 ${member.is_deceased ? 'grayscale opacity-80' : ''}`} />
                 ) : (
                   <img
-                    src={`https://api.dicebear.com/8.x/fun-emoji/svg?seed=${encodeURIComponent(member.full_name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
+                    src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${encodeURIComponent(member.full_name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
                     alt={member.full_name}
                     className={`w-24 h-24 rounded-2xl object-cover ring-2 ring-slate-300 dark:ring-slate-700 bg-slate-100 dark:bg-slate-700 ${member.is_deceased ? 'grayscale opacity-80' : ''}`}
                   />

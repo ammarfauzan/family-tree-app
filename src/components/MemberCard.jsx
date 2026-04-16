@@ -5,7 +5,7 @@ export const MemberCard = memo(function MemberCard({ member, treeId }) {
   const navigate = useNavigate();
   const deceased = member.is_deceased;
   const avatarSeed = encodeURIComponent(member.full_name);
-  const dicebearUrl = `https://api.dicebear.com/8.x/fun-emoji/svg?seed=${avatarSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+  const dicebearUrl = `https://api.dicebear.com/8.x/lorelei/svg?seed=${avatarSeed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
 
   return (
     <button

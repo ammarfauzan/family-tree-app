@@ -39,19 +39,19 @@ const TESTIMONIALS = [
   {
     name: 'Budi Santoso',
     role: 'Ayah dari 3 anak, Jakarta',
-    avatar: 'https://api.dicebear.com/8.x/fun-emoji/svg?seed=Budi',
+    avatar: 'https://api.dicebear.com/8.x/lorelei/svg?seed=Budi&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
     text: 'Baru sadar kalau silsilah keluarga kita sangat luas! Sekarang semua terdokumentasi dengan rapi untuk anak cucu nanti.',
   },
   {
     name: 'Siti Rahayu',
     role: 'Ibu rumah tangga, Yogyakarta',
-    avatar: 'https://api.dicebear.com/8.x/fun-emoji/svg?seed=Siti',
+    avatar: 'https://api.dicebear.com/8.x/lorelei/svg?seed=Siti&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
     text: 'Anak-anak saya yang di luar negeri akhirnya bisa kenal satu sama lain. FamilyTree jadi jembatan kita semua.',
   },
   {
     name: 'Ahmad Fauzan',
     role: 'Mahasiswa, Surabaya',
-    avatar: 'https://api.dicebear.com/8.x/fun-emoji/svg?seed=Ahmad',
+    avatar: 'https://api.dicebear.com/8.x/lorelei/svg?seed=Ahmad&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
     text: 'Tugas sejarah keluarga jadi sangat mudah! Tinggal screenshot pohon silsilahnya dan langsung jadi dong.',
   },
 ];
