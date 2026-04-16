@@ -21,6 +21,7 @@ import JoinTree from './pages/JoinTree';
 import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Landing from './pages/Landing';
+import BulkUpload from './pages/BulkUpload';
 
 export default function App() {
   return (
@@ -49,6 +50,9 @@ export default function App() {
           } />
           <Route path="/trees/:treeId/members/new" element={
             <ProtectedRoute><AddMember /></ProtectedRoute>
+          } />
+          <Route path="/trees/:treeId/bulk-upload" element={
+            <ProtectedRoute><BulkUpload /></ProtectedRoute>
           } />
           <Route path="/trees/:treeId/members/:memberId" element={
             <ProtectedRoute><MemberProfile /></ProtectedRoute>

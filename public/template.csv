@@ -1,0 +1,4 @@
+full_name,gender,birth_date,birth_place,is_deceased,parent1_name,parent2_name,spouse_name
+Ammar Fauzan,male,1995-08-15,Jakarta,false,Budi Santoso,Siti Rahayu,
+Budi Santoso,male,1960-01-01,Bandung,false,,,Siti Rahayu
+Siti Rahayu,female,1962-05-12,Surabaya,false,,,Budi Santoso

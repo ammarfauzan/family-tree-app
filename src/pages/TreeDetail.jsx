@@ -92,6 +92,13 @@ export default function TreeDetail() {
                 >
                   + Add Member
                 </button>
+                <button
+                  onClick={() => navigate(`/trees/${treeId}/bulk-upload`)}
+                  className="btn-secondary text-sm border-brand-500 text-brand-600 hover:bg-brand-50"
+                  title="Upload CSV to add many members at once"
+                >
+                  📄 Bulk Upload
+                </button>
               </div>
             </div>
 

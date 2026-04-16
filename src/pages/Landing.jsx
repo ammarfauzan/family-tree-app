@@ -40,7 +40,7 @@ const TESTIMONIALS = [
     name: 'Budi Santoso',
     role: 'Ayah dari 3 anak, Jakarta',
     avatar: 'https://api.dicebear.com/8.x/fun-emoji/svg?seed=Budi',
-    text: 'Waktu reuni lebaran kemarin, sepupu-sepupu baru tahu kalau nenek kita punya 47 cucu! Sekarang semua terdokumentasi dengan rapi.',
+    text: 'Baru sadar kalau silsilah keluarga kita sangat luas! Sekarang semua terdokumentasi dengan rapi untuk anak cucu nanti.',
   },
   {
     name: 'Siti Rahayu',
@@ -110,9 +110,9 @@ export default function Landing() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-emerald-800/10 blur-3xl pointer-events-none" />
 
         <div className="relative max-w-4xl mx-auto text-center space-y-6">
-          {/* Ramadhan badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-300 text-xs font-semibold tracking-wide uppercase">
-            🌙 Ramadan Mubarak — Momen Terbaik Merangkai Silsilah
+          {/* Heritage badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-emerald-300 text-xs font-semibold tracking-wide uppercase">
+            🌱 Dokumentasikan Jejak Langkah Keluarga Besar
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-extrabold leading-tight tracking-tight">
@@ -122,9 +122,9 @@ export default function Landing() {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Di momen mudik Ramadan ini, saat sanak keluarga berkumpul — jadikan ini
-            kesempatan emas untuk mendokumentasikan silsilah keluarga. Sebuah warisan
-            yang akan dikenang anak cucu.
+            Momen berkumpul dengan sanak keluarga adalah kesempatan emas untuk
+            mendokumentasikan silsilah. Bangun warisan berharga yang akan dikenang dan
+            dilanjutkan oleh generasi penerusmu.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -149,7 +149,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Ramadhan Quote ──────────────────────────── */}
+      {/* ── Inspirational Quote ──────────────────────────── */}
       <section className="bg-emerald-700 dark:bg-emerald-900 py-10 px-4">
         <div className="max-w-3xl mx-auto text-center text-white space-y-2">
           <p className="text-2xl font-bold">"Sebaik-baik manusia adalah yang paling bermanfaat bagi orang lain."</p>
@@ -234,10 +234,10 @@ export default function Landing() {
       {/* ── CTA Banner ──────────────────────────────── */}
       <section className="py-20 px-4 bg-gradient-to-br from-emerald-800 to-emerald-950 text-white">
         <div className="max-w-2xl mx-auto text-center space-y-6">
-          <div className="text-6xl">🌙</div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold">Mulai Ramadan dengan Langkah Bermakna</h2>
+          <div className="text-6xl">🌳</div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold">Mulai Langkah Bermakna Hari Ini</h2>
           <p className="text-emerald-200 text-lg">
-            Satu klik untuk memulai — abadikan silsilah keluargamu hari ini sebelum momen Ramadan berlalu.
+            Satu klik untuk memulai — abadikan silsilah keluargamu sekarang sebelum ceritanya hilang tertelan waktu.
           </p>
           <button
             onClick={handleCTA}

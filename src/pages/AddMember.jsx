@@ -12,8 +12,10 @@ export default function AddMember() {
   const [existingMembers, setExistingMembers] = useState([]);
   const [form, setForm] = useState({
     fullName: '', gender: '', birthDate: '', birthPlace: '',
-    relationType: '', relatedToId: '', relationNote: '',
   });
+  const [relations, setRelations] = useState([
+    { id: Date.now(), relatedToId: '', relationType: '', relationNote: '' }
+  ]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
@@ -54,7 +56,11 @@ export default function AddMember() {
   function validate() {
     const errs = {};
     if (!form.fullName.trim()) errs.fullName = 'Full name is required';
-    if (form.relatedToId && !form.relationType) errs.relationType = 'Please specify the relationship type';
+    relations.forEach((rel, index) => {
+      if (rel.relatedToId && !rel.relationType) {
+        errs[`relationType_${index}`] = 'Please specify the relationship type';
+      }
+    });
     return errs;
   }
 
@@ -66,7 +72,7 @@ export default function AddMember() {
     setLoading(true);
     setServerError('');
     try {
-      await addMember({ treeId, ...form, linkedUserId: linkedUser?.id ?? null, relationNote: form.relationNote });
+      await addMember({ treeId, ...form, relations, linkedUserId: linkedUser?.id ?? null });
       navigate(`/trees/${treeId}`);
     } catch (err) {
       setServerError(err.message || 'Failed to add member.');
@@ -127,51 +133,96 @@ export default function AddMember() {
             </div>
           </div>
 
-          {/* Relationship to existing member */}
+          {/* Relationships to existing members */}
           {existingMembers.length > 0 && (
             <div className="border-t border-slate-200 dark:border-slate-800 pt-5 space-y-4">
-              <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                Relationship (optional)
-              </p>
-              <div>
-                <label className="label">Related to</label>
-                <select id="relatedToId" className="input" value={form.relatedToId} onChange={change('relatedToId')}>
-                  <option value="">— None —</option>
-                  {existingMembers.map((m) => (
-                    <option key={m.id} value={m.id}>{m.full_name}</option>
-                  ))}
-                </select>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
+                  Relationships (optional)
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setRelations([...relations, { id: Date.now() + Math.random(), relatedToId: '', relationType: '', relationNote: '' }])}
+                  className="text-xs font-medium text-brand-600 hover:text-brand-500 transition-colors"
+                >
+                  + Add another relationship
+                </button>
               </div>
 
-              {form.relatedToId && (
-                <div className="space-y-3">
-                  <div>
-                    <label className="label">This new person is a … of {existingMembers.find(m => m.id === form.relatedToId)?.full_name}</label>
-                    <select id="relationType" className="input" value={form.relationType} onChange={change('relationType')}>
-                      <option value="">Select relationship</option>
-                      <option value="child">Child</option>
-                      <option value="parent">Parent</option>
-                      <option value="spouse">Spouse / Partner</option>
-                      <option value="sibling">Sibling</option>
-                    </select>
-                    {errors.relationType && <p className="error-msg">{errors.relationType}</p>}
-                  </div>
-                  {form.relationType && (
-                    <div>
-                      <label className="label">Relationship Note <span className="normal-case font-normal text-slate-600">(optional)</span></label>
-                      <input
-                        id="relationNote"
-                        type="text"
-                        className="input"
-                        placeholder='e.g. "Adopted", "Step-sibling", "Half-sibling"'
-                        value={form.relationNote}
-                        onChange={change('relationNote')}
-                      />
-                    </div>
+              {relations.map((rel, index) => (
+                <div key={rel.id} className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 relative">
+                  {relations.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setRelations(relations.filter((r) => r.id !== rel.id))}
+                      className="absolute top-2 right-2 text-slate-400 hover:text-red-500"
+                      title="Remove relationship"
+                    >
+                      ✕
+                    </button>
                   )}
-                </div>
-              )}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="label">Related to</label>
+                      <select
+                        className="input"
+                        value={rel.relatedToId}
+                        onChange={(e) => {
+                          const newRel = [...relations];
+                          newRel[index].relatedToId = e.target.value;
+                          if (!e.target.value) newRel[index].relationType = '';
+                          setRelations(newRel);
+                        }}
+                      >
+                        <option value="">— None —</option>
+                        {existingMembers.map((m) => (
+                          <option key={m.id} value={m.id}>{m.full_name}</option>
+                        ))}
+                      </select>
+                    </div>
 
+                    {rel.relatedToId && (
+                      <div className="space-y-3">
+                        <div>
+                          <label className="label">This new person is a … of {existingMembers.find(m => m.id === rel.relatedToId)?.full_name}</label>
+                          <select
+                            className="input"
+                            value={rel.relationType}
+                            onChange={(e) => {
+                              const newRel = [...relations];
+                              newRel[index].relationType = e.target.value;
+                              setRelations(newRel);
+                            }}
+                          >
+                            <option value="">Select relationship</option>
+                            <option value="child">Child</option>
+                            <option value="parent">Parent</option>
+                            <option value="spouse">Spouse / Partner</option>
+                            <option value="sibling">Sibling</option>
+                          </select>
+                          {errors[`relationType_${index}`] && <p className="error-msg">{errors[`relationType_${index}`]}</p>}
+                        </div>
+                        {rel.relationType && (
+                          <div>
+                            <label className="label">Relationship Note <span className="normal-case font-normal text-slate-600">(optional)</span></label>
+                            <input
+                              type="text"
+                              className="input"
+                              placeholder='e.g. "Adopted", "Step-sibling", "Half-sibling"'
+                              value={rel.relationNote}
+                              onChange={(e) => {
+                                const newRel = [...relations];
+                                newRel[index].relationNote = e.target.value;
+                                setRelations(newRel);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 

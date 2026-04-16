@@ -15,7 +15,7 @@ const SOCIAL_PLATFORMS = [
 export default function EditMember() {
   const { treeId, memberId } = useParams();
   const navigate = useNavigate();
-  const { getMember, updateMember } = useMembers();
+  const { getMember, updateMember, getMembers, addRelationship, removeRelationship } = useMembers();
   const { uploadProfilePhoto } = useGallery();
 
   const [form, setForm] = useState(null);
@@ -23,6 +23,12 @@ export default function EditMember() {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
+
+  // Relationships
+  const [existingMembers, setExistingMembers] = useState([]);
+  const [existingRelationships, setExistingRelationships] = useState([]);
+  const [newRelation, setNewRelation] = useState({ relatedToId: '', relationType: '', relationNote: '' });
+  const [relationSaving, setRelationSaving] = useState(false);
 
   // Profile photo
   const [photoFile, setPhotoFile] = useState(null);
@@ -59,6 +65,11 @@ export default function EditMember() {
       setSocials(m.social_links || {});
       setInterestsText((m.interests || []).join(', '));
       setPhotoPreview(m.profile_photo || null);
+      setExistingRelationships(m.relationships || []);
+    }).catch(console.error);
+
+    getMembers(treeId).then((members) => {
+      setExistingMembers(members.filter((m) => m.id !== memberId));
     }).catch(console.error).finally(() => setLoading(false));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberId]);
@@ -128,6 +139,34 @@ export default function EditMember() {
       <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
     </div>
   );
+
+  async function handleAddRelation() {
+    if (!newRelation.relatedToId || !newRelation.relationType) return;
+    setRelationSaving(true);
+    try {
+      await addRelationship(treeId, memberId, newRelation.relatedToId, newRelation.relationType, newRelation.relationNote);
+      const m = await getMember(memberId);
+      setExistingRelationships(m.relationships || []);
+      setNewRelation({ relatedToId: '', relationType: '', relationNote: '' });
+    } catch (err) {
+      alert('Failed to add relationship: ' + err.message);
+    } finally {
+      setRelationSaving(false);
+    }
+  }
+
+  async function handleRemoveRelation(rel) {
+    if (!confirm('Are you sure you want to remove this relationship?')) return;
+    setRelationSaving(true);
+    try {
+      await removeRelationship(rel.person_a_id, rel.person_b_id);
+      setExistingRelationships(existingRelationships.filter((r) => r.id !== rel.id));
+    } catch (err) {
+      alert('Failed to remove relationship: ' + err.message);
+    } finally {
+      setRelationSaving(false);
+    }
+  }
 
   const initials = form?.full_name
     .split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
@@ -297,6 +336,92 @@ export default function EditMember() {
                 <label className="label">Custom Notes</label>
                 <textarea id="editCustomNotes" className="input min-h-[70px] resize-y"
                   placeholder="Any other notes…" value={form.custom_notes} onChange={change('custom_notes')} />
+              </div>
+            </div>
+
+            {/* ── Relationships ── */}
+            <div className="card space-y-4">
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Relationships</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Manage relationships for this person.</p>
+
+              {existingRelationships.length > 0 && (
+                <div className="space-y-2 mb-4">
+                  {existingRelationships.map((rel) => {
+                    const relatedPerson = existingMembers.find(m => m.id === rel.person_b_id);
+                    if (!relatedPerson) return null;
+                    return (
+                      <div key={rel.id} className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                        <div>
+                          <p className="text-sm font-medium text-slate-900 dark:text-white capitalize">
+                            {rel.relation_type} <span className="font-normal text-slate-500">of</span> {relatedPerson.full_name}
+                          </p>
+                          {rel.relation_note && <p className="text-xs text-slate-500">{rel.relation_note}</p>}
+                        </div>
+                        <button
+                          type="button"
+                          disabled={relationSaving}
+                          onClick={() => handleRemoveRelation(rel)}
+                          className="text-xs text-red-500 hover:text-red-600 px-2 py-1"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 space-y-3">
+                <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">Add New Relationship</h3>
+                <div>
+                  <label className="label">Related to</label>
+                  <select
+                    className="input"
+                    value={newRelation.relatedToId}
+                    onChange={(e) => setNewRelation({ ...newRelation, relatedToId: e.target.value })}
+                  >
+                    <option value="">— None —</option>
+                    {existingMembers.map((m) => (
+                      <option key={m.id} value={m.id}>{m.full_name}</option>
+                    ))}
+                  </select>
+                </div>
+                {newRelation.relatedToId && (
+                  <>
+                    <div>
+                      <label className="label">Is a … of {existingMembers.find(m => m.id === newRelation.relatedToId)?.full_name}</label>
+                      <select
+                        className="input"
+                        value={newRelation.relationType}
+                        onChange={(e) => setNewRelation({ ...newRelation, relationType: e.target.value })}
+                      >
+                        <option value="">Select relationship</option>
+                        <option value="child">Child</option>
+                        <option value="parent">Parent</option>
+                        <option value="spouse">Spouse / Partner</option>
+                        <option value="sibling">Sibling</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="label">Note <span className="normal-case font-normal text-slate-500">(optional)</span></label>
+                      <input
+                        type="text"
+                        className="input"
+                        value={newRelation.relationNote}
+                        onChange={(e) => setNewRelation({ ...newRelation, relationNote: e.target.value })}
+                        placeholder='e.g. "Adopted"'
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!newRelation.relationType || relationSaving}
+                      onClick={handleAddRelation}
+                      className="btn-secondary w-full text-xs"
+                    >
+                      {relationSaving ? 'Adding…' : '+ Add Relationship'}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
