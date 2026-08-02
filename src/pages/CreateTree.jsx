@@ -86,12 +86,12 @@ export default function CreateTree() {
     <div className="min-h-screen">
       <Navbar />
       <main className="max-w-xl mx-auto px-4 py-10">
-        <Link to="/dashboard" className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
-          ← Back to Dashboard
+        <Link to="/dashboard" className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+          ← Kembali ke Dashboard
         </Link>
 
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Create a New Tree</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Give your family tree a name and get started.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Buat Pohon Baru</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Beri nama pohon keluargamu dan mulai sekarang.</p>
 
         {serverError && (
           <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
@@ -101,12 +101,12 @@ export default function CreateTree() {
 
         <form onSubmit={handleSubmit} noValidate className="card space-y-5">
           <div>
-            <label className="label">Tree Name *</label>
+            <label className="label">Nama Pohon *</label>
             <input
               id="treeName"
               type="text"
               className="input"
-              placeholder="e.g. The Ramadhan Family"
+              placeholder="contoh: Keluarga Besar Ramadhan"
               value={form.name}
               onChange={change('name')}
             />
@@ -114,11 +114,11 @@ export default function CreateTree() {
           </div>
 
           <div>
-            <label className="label">Description</label>
+            <label className="label">Deskripsi</label>
             <textarea
               id="treeDescription"
               className="input min-h-[80px] resize-y"
-              placeholder="A brief description of this family tree…"
+              placeholder="Deskripsi singkat tentang pohon keluarga ini…"
               value={form.description}
               onChange={change('description')}
             />
@@ -126,8 +126,8 @@ export default function CreateTree() {
 
           {/* Symbol Picker */}
           <div>
-            <label className="label">Tree Symbol</label>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Choose an emoji to represent your family tree</p>
+            <label className="label">Simbol Pohon</label>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Pilih emoji untuk merepresentasikan pohon keluargamu</p>
             <div className="grid grid-cols-8 gap-2">
               {SYMBOLS.map((sym) => (
                 <button
@@ -144,21 +144,21 @@ export default function CreateTree() {
                 </button>
               ))}
             </div>
-            <p className="text-center text-3xl mt-3">Selected: {form.symbol}</p>
+            <p className="text-center text-3xl mt-3">Terpilih: {form.symbol}</p>
           </div>
 
           {/* Cover Photo */}
           <div>
-            <label className="label">Cover Photo</label>
+            <label className="label">Foto Sampul</label>
             {coverPreview ? (
               <div className="relative rounded-xl overflow-hidden h-36 bg-white dark:bg-slate-800">
                 <img src={coverPreview} alt="Cover preview" className="w-full h-full object-cover" />
                 <button
                   type="button"
                   onClick={removeCover}
-                  className="absolute top-2 right-2 bg-slate-100 dark:bg-slate-900/80 hover:bg-red-900/80 text-slate-900 dark:text-white rounded-lg px-2 py-1 text-xs transition-colors"
+                  className="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/80 hover:bg-red-600 hover:text-white text-slate-700 dark:text-white rounded-lg px-2 py-1 text-xs transition-colors"
                 >
-                  ✕ Remove
+                  ✕ Hapus
                 </button>
               </div>
             ) : (
@@ -168,7 +168,7 @@ export default function CreateTree() {
                 className="w-full h-28 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-600 flex flex-col items-center justify-center gap-2 text-slate-500 dark:text-slate-400 hover:text-brand-400 transition-colors cursor-pointer"
               >
                 <span className="text-2xl">🖼️</span>
-                <span className="text-xs">Click to upload a cover photo</span>
+                <span className="text-xs">Klik untuk upload foto sampul</span>
                 <span className="text-xs text-slate-600">JPG, PNG or WebP</span>
               </button>
             )}
@@ -183,16 +183,16 @@ export default function CreateTree() {
           </div>
 
           <div>
-            <label className="label">Privacy</label>
+            <label className="label">Privasi</label>
             <select
               id="treePrivacy"
               className="input"
               value={form.privacy}
               onChange={change('privacy')}
             >
-              <option value="public">Public — Anyone can view</option>
-              <option value="family_only">Family Only — Only invited members</option>
-              <option value="private">Private — Only you</option>
+              <option value="public">Publik — Siapa saja bisa melihat</option>
+              <option value="family_only">Keluarga — Hanya anggota yang diundang</option>
+              <option value="private">Pribadi — Hanya kamu</option>
             </select>
           </div>
 
@@ -203,10 +203,10 @@ export default function CreateTree() {
               disabled={loading || uploadProgress}
               className="btn-primary flex-1"
             >
-              {uploadProgress ? 'Uploading photo…' : loading ? 'Creating…' : 'Create Tree'}
+              {uploadProgress ? 'Mengupload foto…' : loading ? 'Membuat…' : 'Buat Pohon'}
             </button>
             <button type="button" onClick={() => navigate('/dashboard')} className="btn-secondary">
-              Cancel
+              Batal
             </button>
           </div>
         </form>

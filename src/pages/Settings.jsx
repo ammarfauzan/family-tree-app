@@ -143,26 +143,26 @@ export default function Settings() {
     <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-10">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Account Settings</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Manage your profile, security, and sessions.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Pengaturan Akun</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Kelola profil, keamanan, dan sesi kamu.</p>
 
         <div className="space-y-5">
 
           {/* ── Profile ── */}
           <div className="card space-y-4">
-            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Profile</h2>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Profil</h2>
             <p className="text-slate-500 dark:text-slate-400 text-xs">{user?.email}</p>
             <form onSubmit={handleSaveName} className="flex gap-3">
               <input
                 id="settingsDisplayName"
                 type="text"
                 className="input flex-1"
-                placeholder="Display name"
+                placeholder="Nama tampilan"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
               />
               <button type="submit" disabled={savingName} className="btn-primary px-4">
-                {nameSaved ? '✓ Saved' : savingName ? '…' : 'Save'}
+                {nameSaved ? '✓ Tersimpan' : savingName ? '…' : 'Simpan'}
               </button>
             </form>
           </div>
@@ -170,13 +170,13 @@ export default function Settings() {
           {/* ── Email ── */}
           {!isOAuthUser && (
             <div className="card space-y-4">
-              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Change Email</h2>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Ubah Email</h2>
               <form onSubmit={handleUpdateEmail} className="space-y-3">
                 <input
                   id="settingsNewEmail"
                   type="email"
                   className="input"
-                  placeholder="New email address"
+                  placeholder="Alamat email baru"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                 />
@@ -186,7 +186,7 @@ export default function Settings() {
                   </p>
                 )}
                 <button type="submit" disabled={savingEmail} className="btn-primary">
-                  {savingEmail ? 'Sending…' : 'Update Email'}
+                  {savingEmail ? 'Mengirim…' : 'Perbarui Email'}
                 </button>
               </form>
             </div>
@@ -195,13 +195,13 @@ export default function Settings() {
           {/* ── Password ── */}
           {!isOAuthUser && (
             <div className="card space-y-4">
-              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Change Password</h2>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Ubah Password</h2>
               <form onSubmit={handleUpdatePassword} className="space-y-3">
                 <input
                   id="settingsNewPw"
                   type="password"
                   className="input"
-                  placeholder="New password (min 8 chars)"
+                  placeholder="Password baru (min 8 karakter)"
                   value={passwordForm.newPw}
                   onChange={(e) => setPasswordForm((f) => ({ ...f, newPw: e.target.value }))}
                 />
@@ -209,7 +209,7 @@ export default function Settings() {
                   id="settingsConfirmPw"
                   type="password"
                   className="input"
-                  placeholder="Confirm new password"
+                  placeholder="Konfirmasi password baru"
                   value={passwordForm.confirmPw}
                   onChange={(e) => setPasswordForm((f) => ({ ...f, confirmPw: e.target.value }))}
                 />
@@ -219,7 +219,7 @@ export default function Settings() {
                   </p>
                 )}
                 <button type="submit" disabled={savingPw} className="btn-primary">
-                  {savingPw ? 'Updating…' : 'Update Password'}
+                  {savingPw ? 'Memperbarui…' : 'Perbarui Password'}
                 </button>
               </form>
             </div>
@@ -227,23 +227,23 @@ export default function Settings() {
 
           {/* ── Connected Accounts ── */}
           <div className="card space-y-4">
-            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Connected Accounts</h2>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Akun Terhubung</h2>
             <div className="space-y-2">
               {connectedProviders.map((p) => (
                 <div key={p} className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
                   <span className="text-lg">{p === 'google' ? '🔵' : p === 'facebook' ? '🔷' : '📧'}</span>
                   <span className="text-slate-800 dark:text-slate-200 text-sm capitalize">{p}</span>
-                  <span className="ml-auto badge bg-green-900/40 text-green-400 border border-green-800">Connected</span>
+                  <span className="ml-auto badge bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-300 dark:border-green-800">Terhubung</span>
                 </div>
               ))}
               {!connectedProviders.includes('google') && (
                 <button onClick={signInWithGoogle} className="btn-secondary text-xs w-full">
-                  + Link Google Account
+                  + Hubungkan Akun Google
                 </button>
               )}
               {!connectedProviders.includes('facebook') && (
                 <button onClick={signInWithFacebook} className="btn-secondary text-xs w-full">
-                  + Link Facebook Account
+                  + Hubungkan Akun Facebook
                 </button>
               )}
             </div>
@@ -252,8 +252,8 @@ export default function Settings() {
           {/* ── MFA ── */}
           <div className="card space-y-4">
             <div>
-              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Two-Factor Authentication (TOTP)</h2>
-              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Add an extra layer of security using an authenticator app.</p>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Autentikasi Dua Faktor (TOTP)</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Tambahkan lapisan keamanan ekstra menggunakan aplikasi autentikator.</p>
             </div>
 
             {mfaMsg && (
@@ -265,23 +265,23 @@ export default function Settings() {
                 {mfaFactors.map((f) => (
                   <div key={f.id} className="flex items-center justify-between p-3 rounded-xl bg-green-900/20 border border-green-800">
                     <div>
-                      <p className="text-green-300 text-sm font-medium">✅ TOTP Enabled</p>
-                      <p className="text-green-700 text-xs">Factor ID: {f.id.slice(0, 8)}…</p>
+                      <p className="text-green-300 text-sm font-medium">✅ TOTP Aktif</p>
+                      <p className="text-green-700 text-xs">ID Faktor: {f.id.slice(0, 8)}…</p>
                     </div>
                     <button onClick={() => handleUnenrollMFA(f.id)} className="btn-danger text-xs px-3 py-1.5">
-                      Disable
+                      Nonaktifkan
                     </button>
                   </div>
                 ))}
               </div>
             ) : mfaEnrollData ? (
               <div className="space-y-4">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">Pindai kode QR ini dengan aplikasi autentikator (Google Authenticator, Authy, dll.):</p>
                 <div className="bg-white p-3 rounded-xl w-fit mx-auto">
                   <img src={mfaEnrollData.totp.qr_code} alt="MFA QR Code" className="w-40 h-40" />
                 </div>
                 <div className="text-center">
-                  <p className="text-slate-500 dark:text-slate-400 text-xs mb-1">Or enter this secret manually:</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mb-1">Atau masukkan secret ini secara manual:</p>
                   <code className="text-slate-700 dark:text-slate-300 text-xs bg-white dark:bg-slate-800 px-3 py-1 rounded-lg select-all">
                     {mfaEnrollData.totp.secret}
                   </code>
@@ -298,8 +298,8 @@ export default function Settings() {
                     onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ''))}
                   />
                   <div className="flex gap-3">
-                    <button type="submit" className="btn-primary flex-1">Verify & Enable</button>
-                    <button type="button" onClick={() => setMfaEnrollData(null)} className="btn-secondary">Cancel</button>
+                    <button type="submit" className="btn-primary flex-1">Verifikasi & Aktifkan</button>
+                    <button type="button" onClick={() => setMfaEnrollData(null)} className="btn-secondary">Batal</button>
                   </div>
                 </form>
               </div>
@@ -310,17 +310,17 @@ export default function Settings() {
                 disabled={mfaEnrolling}
                 className="btn-secondary"
               >
-                {mfaEnrolling ? 'Setting up…' : '🔐 Enable Two-Factor Auth'}
+                {mfaEnrolling ? 'Menyiapkan…' : '🔐 Aktifkan Autentikasi Dua Faktor'}
               </button>
             )}
           </div>
 
           {/* ── Sessions ── */}
           <div className="card space-y-4">
-            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Sessions</h2>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">Sesi</h2>
             <div className="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm">
-              <p className="text-slate-700 dark:text-slate-300 font-medium">Current Session</p>
-              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Started: {sessionCreated}</p>
+              <p className="text-slate-700 dark:text-slate-300 font-medium">Sesi Saat Ini</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">Dimulai: {sessionCreated}</p>
               <p className="text-slate-500 dark:text-slate-400 text-xs">Email: {user?.email}</p>
             </div>
             <button
@@ -328,7 +328,7 @@ export default function Settings() {
               onClick={() => signOut('global')}
               className="btn-danger text-sm"
             >
-              Sign Out from All Devices
+              Keluar dari Semua Perangkat
             </button>
           </div>
 

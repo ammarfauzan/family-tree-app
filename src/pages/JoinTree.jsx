@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
 import { useAuth } from '../hooks/useAuth';
 import { useInvitation } from '../hooks/useInvitation';
 
@@ -18,18 +17,18 @@ export default function JoinTree() {
   const [joined, setJoined] = useState(false);
   useEffect(() => {
     if (!token) {
-      setError('Invalid or missing invitation link.');
+      setError('Link undangan tidak valid atau tidak ada.');
       setLoading(false);
       return;
     }
     getInvitationByToken(token)
       .then((inv) => {
         if (!inv) {
-          setError('Invitation not found or has already been used.');
+          setError('Undangan tidak ditemukan atau sudah digunakan.');
         } else if (inv.status !== 'pending') {
-          setError(`This invitation is no longer valid (${inv.status}).`);
+          setError(`Undangan ini sudah tidak berlaku (${inv.status}).`);
         } else if (new Date(inv.expires_at) < new Date()) {
-          setError('This invitation link has expired.');
+          setError('Link undangan ini sudah kedaluwarsa.');
         } else {
           setInvite(inv);
         }
@@ -41,7 +40,6 @@ export default function JoinTree() {
 
   async function handleJoin() {
     if (!user) {
-      // Redirect to sign in, preserving the join URL
       navigate(`/sign-in?redirect=${encodeURIComponent(window.location.href)}`);
       return;
     }
@@ -58,13 +56,15 @@ export default function JoinTree() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-brand-950 flex flex-col items-center justify-center px-4 py-12">
-      <Link to="/" className="flex items-center gap-2 mb-8">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 via-brand-50/30 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-brand-950">
+      <div className="fixed -top-40 -right-40 w-80 h-80 rounded-full bg-brand-200/30 dark:bg-brand-800/10 blur-3xl pointer-events-none" />
+
+      <Link to="/" className="flex items-center gap-2 mb-8 relative z-10">
         <span className="text-3xl">🌳</span>
         <span className="text-xl font-bold text-slate-900 dark:text-white">FamilyTree</span>
       </Link>
 
-      <div className="card w-full max-w-md">
+      <div className="card w-full max-w-md relative z-10 page-enter">
         {loading && (
           <div className="flex justify-center py-10">
             <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
@@ -74,17 +74,17 @@ export default function JoinTree() {
         {!loading && error && (
           <div className="text-center space-y-4 py-4">
             <div className="text-5xl">🔗</div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Invalid Invitation</h1>
-            <p className="text-red-400 text-sm">{error}</p>
-            <Link to="/dashboard" className="btn-secondary inline-flex">Go to Dashboard</Link>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">Undangan Tidak Valid</h1>
+            <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+            <Link to="/dashboard" className="btn-secondary inline-flex">Ke Dashboard</Link>
           </div>
         )}
 
         {!loading && !error && joined && (
           <div className="text-center space-y-4 py-4">
             <div className="text-5xl">🎉</div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">You're in!</h1>
-            <p className="text-slate-600 dark:text-slate-400 text-sm">Welcome to <strong className="text-slate-900 dark:text-white">{invite?.tree_name}</strong>. Redirecting…</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Berhasil Bergabung!</h1>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Selamat datang di <strong className="text-slate-900 dark:text-white">{invite?.tree_name}</strong>. Mengalihkan…</p>
             <div className="w-6 h-6 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         )}
@@ -93,34 +93,34 @@ export default function JoinTree() {
           <>
             <div className="text-center mb-6">
               <div className="text-5xl mb-3">🌳</div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">You're Invited!</h1>
-              <p className="text-slate-600 dark:text-slate-400 text-sm">You've been invited to join the family tree:</p>
-              <p className="text-brand-300 font-semibold text-lg mt-2">{invite.tree_name}</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Kamu Diundang!</h1>
+              <p className="text-slate-600 dark:text-slate-400 text-sm">Kamu telah diundang untuk bergabung ke pohon keluarga:</p>
+              <p className="text-brand-700 dark:text-brand-300 font-semibold text-lg mt-2">{invite.tree_name}</p>
               {invite.person_name && (
                 <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
-                  You'll be linked to the profile: <span className="text-slate-700 dark:text-slate-300">{invite.person_name}</span>
+                  Kamu akan dihubungkan dengan profil: <span className="text-slate-700 dark:text-slate-300">{invite.person_name}</span>
                 </p>
               )}
-              <span className="badge bg-brand-900/50 text-brand-300 border border-brand-800 mt-3 inline-flex">
-                Role: {invite.role}
+              <span className="badge bg-brand-50 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 mt-3 inline-flex">
+                Peran: {invite.role}
               </span>
             </div>
 
             {!user ? (
               <div className="space-y-3">
-                <p className="text-slate-500 dark:text-slate-400 text-sm text-center">Sign in or create an account to accept this invitation.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm text-center">Masuk atau buat akun untuk menerima undangan ini.</p>
                 <button
                   id="joinSignInBtn"
                   onClick={() => navigate(`/sign-in?redirect=${encodeURIComponent(window.location.href)}`)}
                   className="btn-primary w-full"
                 >
-                  Sign In to Accept
+                  Masuk untuk Bergabung
                 </button>
                 <button
                   onClick={() => navigate(`/sign-up?redirect=${encodeURIComponent(window.location.href)}`)}
                   className="btn-secondary w-full"
                 >
-                  Create an Account
+                  Buat Akun Baru
                 </button>
               </div>
             ) : (
@@ -130,7 +130,7 @@ export default function JoinTree() {
                 disabled={joining}
                 className="btn-primary w-full"
               >
-                {joining ? 'Joining…' : `Accept & Join ${invite.tree_name}`}
+                {joining ? 'Bergabung…' : `Terima & Bergabung ke ${invite.tree_name}`}
               </button>
             )}
           </>

@@ -89,12 +89,12 @@ export default function AddMember() {
     <div className="min-h-screen">
       <Navbar />
       <main className="max-w-xl mx-auto px-4 py-10">
-        <Link to={`/trees/${treeId}`} className="text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
-          ← Back to Tree
+        <Link to={`/trees/${treeId}`} className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+          ← Kembali ke Pohon
         </Link>
 
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Add Family Member</h1>
-        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400 text-sm mb-8">Add a new person to this family tree.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Tambah Anggota Keluarga</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Tambahkan orang baru ke pohon keluarga ini.</p>
 
         {serverError && (
           <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
@@ -104,31 +104,31 @@ export default function AddMember() {
 
         <form onSubmit={handleSubmit} noValidate className="card space-y-5">
           <div>
-            <label className="label">Full Name *</label>
-            <input id="memberFullName" type="text" className="input" placeholder="e.g. Sari Ramadhan"
+            <label className="label">Nama Lengkap *</label>
+            <input id="memberFullName" type="text" className="input" placeholder="contoh: Sari Ramadhan"
               value={form.fullName} onChange={change('fullName')} />
             {errors.fullName && <p className="error-msg">{errors.fullName}</p>}
           </div>
 
           <div>
-            <label className="label">Gender</label>
+            <label className="label">Jenis Kelamin</label>
             <select id="memberGender" className="input" value={form.gender} onChange={change('gender')}>
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-              <option value="unknown">Unknown</option>
+              <option value="">Pilih jenis kelamin</option>
+              <option value="male">Laki-laki</option>
+              <option value="female">Perempuan</option>
+              <option value="other">Lainnya</option>
+              <option value="unknown">Tidak diketahui</option>
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="label">Date of Birth</label>
+              <label className="label">Tanggal Lahir</label>
               <input id="memberBirthDate" type="date" className="input" value={form.birthDate} onChange={change('birthDate')} />
             </div>
             <div>
-              <label className="label">Place of Birth</label>
-              <input id="memberBirthPlace" type="text" className="input" placeholder="City, Country"
+              <label className="label">Tempat Lahir</label>
+              <input id="memberBirthPlace" type="text" className="input" placeholder="Kota, Negara"
                 value={form.birthPlace} onChange={change('birthPlace')} />
             </div>
           </div>
@@ -138,14 +138,14 @@ export default function AddMember() {
             <div className="border-t border-slate-200 dark:border-slate-800 pt-5 space-y-4">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                  Relationships (optional)
+                  Hubungan Keluarga (opsional)
                 </p>
                 <button
                   type="button"
                   onClick={() => setRelations([...relations, { id: Date.now() + Math.random(), relatedToId: '', relationType: '', relationNote: '' }])}
                   className="text-xs font-medium text-brand-600 hover:text-brand-500 transition-colors"
                 >
-                  + Add another relationship
+                  + Tambah hubungan lain
                 </button>
               </div>
 
@@ -163,7 +163,7 @@ export default function AddMember() {
                   )}
                   <div className="space-y-4">
                     <div>
-                      <label className="label">Related to</label>
+                      <label className="label">Berhubungan dengan</label>
                       <select
                         className="input"
                         value={rel.relatedToId}
@@ -174,7 +174,7 @@ export default function AddMember() {
                           setRelations(newRel);
                         }}
                       >
-                        <option value="">— None —</option>
+                        <option value="">— Tidak ada —</option>
                         {existingMembers.map((m) => (
                           <option key={m.id} value={m.id}>{m.full_name}</option>
                         ))}
@@ -184,7 +184,7 @@ export default function AddMember() {
                     {rel.relatedToId && (
                       <div className="space-y-3">
                         <div>
-                          <label className="label">This new person is a … of {existingMembers.find(m => m.id === rel.relatedToId)?.full_name}</label>
+                          <label className="label">Orang baru ini adalah … dari {existingMembers.find(m => m.id === rel.relatedToId)?.full_name}</label>
                           <select
                             className="input"
                             value={rel.relationType}
@@ -194,21 +194,21 @@ export default function AddMember() {
                               setRelations(newRel);
                             }}
                           >
-                            <option value="">Select relationship</option>
-                            <option value="child">Child</option>
-                            <option value="parent">Parent</option>
-                            <option value="spouse">Spouse / Partner</option>
-                            <option value="sibling">Sibling</option>
+                            <option value="">Pilih hubungan</option>
+                            <option value="child">Anak</option>
+                            <option value="parent">Orang Tua</option>
+                            <option value="spouse">Pasangan</option>
+                            <option value="sibling">Saudara Kandung</option>
                           </select>
                           {errors[`relationType_${index}`] && <p className="error-msg">{errors[`relationType_${index}`]}</p>}
                         </div>
                         {rel.relationType && (
                           <div>
-                            <label className="label">Relationship Note <span className="normal-case font-normal text-slate-600">(optional)</span></label>
+                            <label className="label">Catatan Hubungan <span className="normal-case font-normal text-slate-600">(opsional)</span></label>
                             <input
                               type="text"
                               className="input"
-                              placeholder='e.g. "Adopted", "Step-sibling", "Half-sibling"'
+                              placeholder='contoh: "Angkat", "Tiri", "Saudara seayah"'
                               value={rel.relationNote}
                               onChange={(e) => {
                                 const newRel = [...relations];
@@ -229,11 +229,11 @@ export default function AddMember() {
           {/* Link to registered user (optional) */}
           <div className="border-t border-slate-200 dark:border-slate-800 pt-5 space-y-3">
             <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-              Link to Registered User <span className="font-normal normal-case text-slate-600">(optional)</span>
+              Hubungkan ke Pengguna Terdaftar <span className="font-normal normal-case text-slate-600">(opsional)</span>
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-400">If this person already has an account, link them so they can manage their own profile.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Jika orang ini sudah punya akun, hubungkan agar mereka bisa mengelola profilnya sendiri.</p>
             <div>
-              <label className="label">Search by email</label>
+              <label className="label">Cari berdasarkan email</label>
               <input
                 id="linkedUserEmail"
                 type="email"
@@ -244,37 +244,37 @@ export default function AddMember() {
               />
             </div>
             {userSearching && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-400 flex items-center gap-1.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="inline-block w-3 h-3 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
-                Searching…
+                Mencari…
               </p>
             )}
             {linkedUser && (
               <div className="flex items-center justify-between p-3 rounded-xl bg-green-900/20 border border-green-800">
                 <div>
-                  <p className="text-green-300 text-sm font-medium">{linkedUser.full_name || 'Registered user'}</p>
+                  <p className="text-green-700 dark:text-green-300 text-sm font-medium">{linkedUser.full_name || 'Pengguna terdaftar'}</p>
                   <p className="text-green-600 text-xs">{userEmail}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => { setLinkedUser(null); setUserEmail(''); }}
-                  className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-400 hover:text-red-400 transition-colors"
+                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-400 transition-colors"
                 >
                   ✕ Clear
                 </button>
               </div>
             )}
             {userNotFound && userEmail.includes('@') && (
-              <p className="text-xs text-amber-500">No registered user found with that email. The member will be added as an unregistered record.</p>
+              <p className="text-xs text-amber-600 dark:text-amber-400">Tidak ditemukan pengguna terdaftar dengan email tersebut. Anggota akan ditambahkan sebagai catatan tidak terdaftar.</p>
             )}
           </div>
 
           <div className="flex gap-3 pt-2">
             <button id="saveMemberBtn" type="submit" disabled={loading} className="btn-primary flex-1">
-              {loading ? 'Saving…' : 'Add Member'}
+              {loading ? 'Menyimpan…' : 'Tambah Anggota'}
             </button>
             <button type="button" onClick={() => navigate(`/trees/${treeId}`)} className="btn-secondary">
-              Cancel
+              Batal
             </button>
           </div>
         </form>

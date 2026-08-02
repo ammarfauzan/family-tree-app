@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
 import { ThemeProvider } from './hooks/useTheme';
+import { ToastProvider } from './components/Toast';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Auth pages
@@ -27,6 +28,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+      <ToastProvider>
       <BrowserRouter>
         <Routes>
           {/* Root: Landing page */}
@@ -75,6 +77,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
+      </ToastProvider>
       </AuthProvider>
     </ThemeProvider>
   );

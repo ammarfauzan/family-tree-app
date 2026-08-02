@@ -1,14 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
+import { ConfirmModal } from '../components/ConfirmModal';
+import { useToast } from '../components/Toast';
 import { useMembers } from '../hooks/useMembers';
 import { useGallery } from '../hooks/useGallery';
 
 const SOCIAL_PLATFORMS = [
   { key: 'instagram', label: 'Instagram', placeholder: '@username', icon: '📸' },
-  { key: 'facebook', label: 'Facebook', placeholder: 'profile URL or name', icon: '👤' },
+  { key: 'facebook', label: 'Facebook', placeholder: 'URL profil atau nama', icon: '👤' },
   { key: 'twitter', label: 'X / Twitter', placeholder: '@username', icon: '🐦' },
-  { key: 'linkedin', label: 'LinkedIn', placeholder: 'profile URL', icon: '💼' },
+  { key: 'linkedin', label: 'LinkedIn', placeholder: 'URL profil', icon: '💼' },
   { key: 'whatsapp', label: 'WhatsApp', placeholder: '+62 8xx xxxx', icon: '💬' },
 ];
 
@@ -17,6 +19,7 @@ export default function EditMember() {
   const navigate = useNavigate();
   const { getMember, updateMember, getMembers, addRelationship, removeRelationship } = useMembers();
   const { uploadProfilePhoto } = useGallery();
+  const toast = useToast();
 
   const [form, setForm] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,6 +32,9 @@ export default function EditMember() {
   const [existingRelationships, setExistingRelationships] = useState([]);
   const [newRelation, setNewRelation] = useState({ relatedToId: '', relationType: '', relationNote: '' });
   const [relationSaving, setRelationSaving] = useState(false);
+
+  // Delete relation modal
+  const [relToRemove, setRelToRemove] = useState(null);
 
   // Profile photo
   const [photoFile, setPhotoFile] = useState(null);
@@ -76,7 +82,7 @@ export default function EditMember() {
 
   function validate() {
     const errs = {};
-    if (!form.full_name.trim()) errs.full_name = 'Full name is required';
+    if (!form.full_name.trim()) errs.full_name = 'Nama lengkap wajib diisi';
     return errs;
   }
 
@@ -118,9 +124,10 @@ export default function EditMember() {
         social_links: socials,
         interests,
       });
+      toast.success('Perubahan berhasil disimpan!');
       navigate(`/trees/${treeId}/members/${memberId}`);
     } catch (err) {
-      setServerError(err.message || 'Failed to update member.');
+      setServerError(err.message || 'Gagal memperbarui anggota.');
     } finally {
       setSaving(false);
       setUploadingPhoto(false);
@@ -135,8 +142,29 @@ export default function EditMember() {
   }
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
+    <div className="min-h-screen">
+      <Navbar />
+      <main className="max-w-xl mx-auto px-4 py-10 page-enter">
+        <div className="space-y-6">
+          <div className="h-4 w-32 skeleton" />
+          <div className="h-8 w-48 skeleton" />
+          <div className="card space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 rounded-2xl skeleton" />
+              <div className="h-9 w-32 skeleton" />
+            </div>
+          </div>
+          <div className="card space-y-4">
+            <div className="h-4 w-24 skeleton" />
+            <div className="h-10 skeleton" />
+            <div className="h-10 skeleton" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="h-10 skeleton" />
+              <div className="h-10 skeleton" />
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 
@@ -148,23 +176,26 @@ export default function EditMember() {
       const m = await getMember(memberId);
       setExistingRelationships(m.relationships || []);
       setNewRelation({ relatedToId: '', relationType: '', relationNote: '' });
+      toast.success('Hubungan berhasil ditambahkan!');
     } catch (err) {
-      alert('Failed to add relationship: ' + err.message);
+      toast.error('Gagal menambahkan hubungan: ' + err.message);
     } finally {
       setRelationSaving(false);
     }
   }
 
-  async function handleRemoveRelation(rel) {
-    if (!confirm('Are you sure you want to remove this relationship?')) return;
+  async function handleRemoveRelationConfirm() {
+    if (!relToRemove) return;
     setRelationSaving(true);
     try {
-      await removeRelationship(rel.person_a_id, rel.person_b_id);
-      setExistingRelationships(existingRelationships.filter((r) => r.id !== rel.id));
+      await removeRelationship(relToRemove.person_a_id, relToRemove.person_b_id);
+      setExistingRelationships(existingRelationships.filter((r) => r.id !== relToRemove.id));
+      toast.success('Hubungan berhasil dihapus.');
     } catch (err) {
-      alert('Failed to remove relationship: ' + err.message);
+      toast.error('Gagal menghapus hubungan: ' + err.message);
     } finally {
       setRelationSaving(false);
+      setRelToRemove(null);
     }
   }
 
@@ -174,17 +205,23 @@ export default function EditMember() {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="max-w-xl mx-auto px-4 py-10">
-        <Link to={`/trees/${treeId}/members/${memberId}`}
-          className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
-          ← Back to Profile
-        </Link>
+      <main className="max-w-xl mx-auto px-4 py-10 page-enter">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
+          <Link to="/dashboard" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Dashboard</Link>
+          <span>›</span>
+          <Link to={`/trees/${treeId}`} className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Pohon</Link>
+          <span>›</span>
+          <Link to={`/trees/${treeId}/members/${memberId}`} className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Profil</Link>
+          <span>›</span>
+          <span className="text-slate-900 dark:text-white font-medium">Edit</span>
+        </nav>
 
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Edit Member</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Update this person's information.</p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Edit Anggota</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">Perbarui informasi orang ini.</p>
 
         {serverError && (
-          <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
+          <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
             {serverError}
           </div>
         )}
@@ -194,17 +231,17 @@ export default function EditMember() {
 
             {/* ── Profile Photo ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Profile Photo</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Foto Profil</h2>
               <div className="flex items-center gap-4">
                 <div className="relative flex-shrink-0">
                   {photoPreview ? (
                     <img
                       src={photoPreview}
-                      alt="Profile"
+                      alt="Profil"
                       className="w-20 h-20 rounded-2xl object-cover ring-2 ring-slate-300 dark:ring-slate-700"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-2xl bg-brand-700 flex items-center justify-center text-slate-900 dark:text-white font-bold text-xl">
+                    <div className="w-20 h-20 rounded-2xl bg-brand-100 dark:bg-brand-900/40 flex items-center justify-center text-brand-700 dark:text-brand-300 font-bold text-xl">
                       {initials}
                     </div>
                   )}
@@ -212,7 +249,7 @@ export default function EditMember() {
                     <button
                       type="button"
                       onClick={() => { setPhotoFile(null); setPhotoPreview(null); setForm(f => ({ ...f, profile_photo: '' })); }}
-                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 text-slate-900 dark:text-white rounded-full text-xs flex items-center justify-center leading-none hover:bg-red-500"
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-600 text-white rounded-full text-xs flex items-center justify-center leading-none hover:bg-red-500"
                     >×</button>
                   )}
                 </div>
@@ -222,9 +259,9 @@ export default function EditMember() {
                     onClick={() => photoInputRef.current?.click()}
                     className="btn-secondary text-xs"
                   >
-                    {photoPreview ? '🔄 Change Photo' : '📷 Upload Photo'}
+                    {photoPreview ? '🔄 Ganti Foto' : '📷 Upload Foto'}
                   </button>
-                  <p className="text-slate-600 text-xs mt-1.5">JPG, PNG or WebP</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs mt-1.5">JPG, PNG atau WebP</p>
                 </div>
                 <input ref={photoInputRef} id="profilePhotoInput" type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
               </div>
@@ -232,32 +269,32 @@ export default function EditMember() {
 
             {/* ── Basic Info ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Basic Info</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Informasi Dasar</h2>
               <div>
-                <label className="label">Full Name *</label>
+                <label className="label">Nama Lengkap *</label>
                 <input id="editFullName" type="text" className="input" value={form.full_name} onChange={change('full_name')} />
                 {errors.full_name && <p className="error-msg">{errors.full_name}</p>}
               </div>
               <div>
-                <label className="label">Nickname</label>
-                <input id="editNickname" type="text" className="input" placeholder="Optional" value={form.nickname} onChange={change('nickname')} />
+                <label className="label">Nama Panggilan</label>
+                <input id="editNickname" type="text" className="input" placeholder="Opsional" value={form.nickname} onChange={change('nickname')} />
               </div>
               <div>
-                <label className="label">Gender</label>
+                <label className="label">Jenis Kelamin</label>
                 <select id="editGender" className="input" value={form.gender} onChange={change('gender')}>
-                  <option value="unknown">Unknown</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
+                  <option value="unknown">Tidak diketahui</option>
+                  <option value="male">Laki-laki</option>
+                  <option value="female">Perempuan</option>
+                  <option value="other">Lainnya</option>
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="label">Date of Birth</label>
+                  <label className="label">Tanggal Lahir</label>
                   <input id="editBirthDate" type="date" className="input" value={form.birth_date} onChange={change('birth_date')} />
                 </div>
                 <div>
-                  <label className="label">Place of Birth</label>
+                  <label className="label">Tempat Lahir</label>
                   <input id="editBirthPlace" type="text" className="input" value={form.birth_place} onChange={change('birth_place')} />
                 </div>
               </div>
@@ -265,12 +302,12 @@ export default function EditMember() {
                 <input id="editIsDeceased" type="checkbox" className="w-4 h-4 accent-brand-500"
                   checked={form.is_deceased} onChange={change('is_deceased')} />
                 <label htmlFor="editIsDeceased" className="text-slate-600 dark:text-slate-400 text-sm select-none cursor-pointer">
-                  Mark as deceased
+                  Tandai sebagai almarhum
                 </label>
               </div>
               {form.is_deceased && (
                 <div>
-                  <label className="label">Date of Death</label>
+                  <label className="label">Tanggal Wafat</label>
                   <input id="editDeathDate" type="date" className="input" value={form.death_date} onChange={change('death_date')} />
                 </div>
               )}
@@ -278,71 +315,71 @@ export default function EditMember() {
 
             {/* ── Contact ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Contact & Location</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Kontak & Lokasi</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="label">Email</label>
                   <input id="editEmail" type="email" className="input" value={form.email} onChange={change('email')} />
                 </div>
                 <div>
-                  <label className="label">Phone</label>
+                  <label className="label">Telepon</label>
                   <input id="editPhone" type="tel" className="input" value={form.phone} onChange={change('phone')} />
                 </div>
               </div>
               <div>
-                <label className="label">Address</label>
+                <label className="label">Alamat</label>
                 <input id="editAddress" type="text" className="input" value={form.address} onChange={change('address')} />
               </div>
             </div>
 
             {/* ── Personal Background ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Personal Background</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Latar Belakang</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="label">Occupation</label>
+                  <label className="label">Pekerjaan</label>
                   <input id="editOccupation" type="text" className="input" value={form.occupation} onChange={change('occupation')} />
                 </div>
                 <div>
-                  <label className="label">Education</label>
+                  <label className="label">Pendidikan</label>
                   <input id="editEducation" type="text" className="input" value={form.education} onChange={change('education')} />
                 </div>
                 <div>
-                  <label className="label">Nationality</label>
+                  <label className="label">Kewarganegaraan</label>
                   <input id="editNationality" type="text" className="input" value={form.nationality} onChange={change('nationality')} />
                 </div>
                 <div>
-                  <label className="label">Religion</label>
+                  <label className="label">Agama</label>
                   <input id="editReligion" type="text" className="input" value={form.religion} onChange={change('religion')} />
                 </div>
               </div>
               <div>
-                <label className="label">Interests / Hobbies <span className="text-slate-600 font-normal normal-case">(comma-separated)</span></label>
+                <label className="label">Minat / Hobi <span className="text-slate-600 font-normal normal-case">(dipisahkan koma)</span></label>
                 <input
                   id="editInterests"
                   type="text"
                   className="input"
-                  placeholder='e.g. Reading, Football, Cooking'
+                  placeholder='contoh: Membaca, Sepak Bola, Memasak'
                   value={interestsText}
                   onChange={(e) => setInterestsText(e.target.value)}
                 />
               </div>
               <div>
-                <label className="label">Biography / Life Story</label>
+                <label className="label">Biografi / Kisah Hidup</label>
                 <textarea id="editBiography" className="input min-h-[100px] resize-y"
-                  placeholder="Share their life story…" value={form.biography} onChange={change('biography')} />
+                  placeholder="Ceritakan kisah hidupnya…" value={form.biography} onChange={change('biography')} />
               </div>
               <div>
-                <label className="label">Custom Notes</label>
+                <label className="label">Catatan Lainnya</label>
                 <textarea id="editCustomNotes" className="input min-h-[70px] resize-y"
-                  placeholder="Any other notes…" value={form.custom_notes} onChange={change('custom_notes')} />
+                  placeholder="Catatan tambahan…" value={form.custom_notes} onChange={change('custom_notes')} />
               </div>
             </div>
 
             {/* ── Relationships ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Relationships</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Manage relationships for this person.</p>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Hubungan Keluarga</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Kelola hubungan untuk orang ini.</p>
 
               {existingRelationships.length > 0 && (
                 <div className="space-y-2 mb-4">
@@ -353,17 +390,17 @@ export default function EditMember() {
                       <div key={rel.id} className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                         <div>
                           <p className="text-sm font-medium text-slate-900 dark:text-white capitalize">
-                            {rel.relation_type} <span className="font-normal text-slate-500">of</span> {relatedPerson.full_name}
+                            {rel.relation_type} <span className="font-normal text-slate-500">dari</span> {relatedPerson.full_name}
                           </p>
                           {rel.relation_note && <p className="text-xs text-slate-500">{rel.relation_note}</p>}
                         </div>
                         <button
                           type="button"
                           disabled={relationSaving}
-                          onClick={() => handleRemoveRelation(rel)}
-                          className="text-xs text-red-500 hover:text-red-600 px-2 py-1"
+                          onClick={() => setRelToRemove(rel)}
+                          className="text-xs text-red-500 hover:text-red-600 px-2 py-1 transition-colors"
                         >
-                          Remove
+                          Hapus
                         </button>
                       </div>
                     );
@@ -372,15 +409,15 @@ export default function EditMember() {
               )}
 
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 space-y-3">
-                <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">Add New Relationship</h3>
+                <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">Tambah Hubungan Baru</h3>
                 <div>
-                  <label className="label">Related to</label>
+                  <label className="label">Berhubungan dengan</label>
                   <select
                     className="input"
                     value={newRelation.relatedToId}
                     onChange={(e) => setNewRelation({ ...newRelation, relatedToId: e.target.value })}
                   >
-                    <option value="">— None —</option>
+                    <option value="">— Tidak ada —</option>
                     {existingMembers.map((m) => (
                       <option key={m.id} value={m.id}>{m.full_name}</option>
                     ))}
@@ -389,27 +426,27 @@ export default function EditMember() {
                 {newRelation.relatedToId && (
                   <>
                     <div>
-                      <label className="label">Is a … of {existingMembers.find(m => m.id === newRelation.relatedToId)?.full_name}</label>
+                      <label className="label">Adalah … dari {existingMembers.find(m => m.id === newRelation.relatedToId)?.full_name}</label>
                       <select
                         className="input"
                         value={newRelation.relationType}
                         onChange={(e) => setNewRelation({ ...newRelation, relationType: e.target.value })}
                       >
-                        <option value="">Select relationship</option>
-                        <option value="child">Child</option>
-                        <option value="parent">Parent</option>
-                        <option value="spouse">Spouse / Partner</option>
-                        <option value="sibling">Sibling</option>
+                        <option value="">Pilih hubungan</option>
+                        <option value="child">Anak</option>
+                        <option value="parent">Orang Tua</option>
+                        <option value="spouse">Pasangan</option>
+                        <option value="sibling">Saudara Kandung</option>
                       </select>
                     </div>
                     <div>
-                      <label className="label">Note <span className="normal-case font-normal text-slate-500">(optional)</span></label>
+                      <label className="label">Catatan <span className="normal-case font-normal text-slate-500">(opsional)</span></label>
                       <input
                         type="text"
                         className="input"
                         value={newRelation.relationNote}
                         onChange={(e) => setNewRelation({ ...newRelation, relationNote: e.target.value })}
-                        placeholder='e.g. "Adopted"'
+                        placeholder='contoh: "Angkat"'
                       />
                     </div>
                     <button
@@ -418,7 +455,7 @@ export default function EditMember() {
                       onClick={handleAddRelation}
                       className="btn-secondary w-full text-xs"
                     >
-                      {relationSaving ? 'Adding…' : '+ Add Relationship'}
+                      {relationSaving ? 'Menambahkan…' : '+ Tambah Hubungan'}
                     </button>
                   </>
                 )}
@@ -427,7 +464,7 @@ export default function EditMember() {
 
             {/* ── Social Links ── */}
             <div className="card space-y-4">
-              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Social Media</h2>
+              <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wide">Media Sosial</h2>
               {SOCIAL_PLATFORMS.map((p) => (
                 <div key={p.key}>
                   <label className="label">
@@ -448,15 +485,28 @@ export default function EditMember() {
             {/* Actions */}
             <div className="flex gap-3">
               <button id="saveMemberEditBtn" type="submit" disabled={saving || uploadingPhoto} className="btn-primary flex-1">
-                {uploadingPhoto ? 'Uploading photo…' : saving ? 'Saving…' : 'Save Changes'}
+                {uploadingPhoto ? 'Mengupload foto…' : saving ? 'Menyimpan…' : 'Simpan Perubahan'}
               </button>
               <button type="button" onClick={() => navigate(`/trees/${treeId}/members/${memberId}`)} className="btn-secondary">
-                Cancel
+                Batal
               </button>
             </div>
           </form>
         )}
       </main>
+
+      {/* Remove relation confirm modal */}
+      <ConfirmModal
+        open={!!relToRemove}
+        title="Hapus Hubungan?"
+        message="Apakah kamu yakin ingin menghapus hubungan ini?"
+        confirmLabel="Hapus"
+        cancelLabel="Batal"
+        variant="danger"
+        loading={relationSaving}
+        onConfirm={handleRemoveRelationConfirm}
+        onCancel={() => setRelToRemove(null)}
+      />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export default function BulkUpload() {
 
     setLoading(true);
     setError('');
-    setProgress('Parsing CSV file...');
+    setProgress('Membaca file CSV...');
 
     Papa.parse(file, {
       header: true,
@@ -41,7 +41,7 @@ export default function BulkUpload() {
           const rows = results.data;
           
           if (rows.length === 0) {
-            throw new Error('CSV file is empty.');
+            throw new Error('File CSV kosong.');
           }
 
           // Strict validation
@@ -51,12 +51,12 @@ export default function BulkUpload() {
             }
           }
 
-          setProgress('Fetching existing tree members...');
+          setProgress('Mengambil data anggota yang sudah ada...');
           const existingMembers = await getMembers(treeId);
           const existingNameMap = new Map();
           existingMembers.forEach(m => existingNameMap.set(m.full_name.toLowerCase(), m.id));
 
-          setProgress('Preparing new member insertions...');
+          setProgress('Menyiapkan data anggota baru...');
           const newPersonsToInsert = [];
           
           // Deduplicate incoming rows against existing members
@@ -79,7 +79,7 @@ export default function BulkUpload() {
           });
 
           if (newPersonsToInsert.length > 0) {
-            setProgress(`Inserting ${newPersonsToInsert.length} new members...`);
+            setProgress(`Memasukkan ${newPersonsToInsert.length} anggota baru...`);
             const { data: insertedPersons, error: insertError } = await supabase
               .from('persons')
               .insert(newPersonsToInsert)
@@ -93,7 +93,7 @@ export default function BulkUpload() {
             });
           }
 
-          setProgress('Resolving and creating relationships...');
+          setProgress('Membuat hubungan keluarga...');
           const relationsToInsert = [];
 
           const existingRelationsSet = new Set();
@@ -150,12 +150,12 @@ export default function BulkUpload() {
           });
 
           if (relationsToInsert.length > 0) {
-            setProgress(`Inserting ${relationsToInsert.length} relationship links...`);
+            setProgress(`Memasukkan ${relationsToInsert.length} hubungan...`);
             const { error: relError } = await supabase.from('relationships').insert(relationsToInsert);
             if (relError) throw relError;
           }
 
-          setProgress('Done!');
+          setProgress('Selesai!');
           setTimeout(() => {
             navigate(`/trees/${treeId}`);
           }, 1000);
@@ -177,31 +177,31 @@ export default function BulkUpload() {
     <div className="min-h-screen">
       <Navbar />
       <main className="max-w-2xl mx-auto px-4 py-10">
-        <Link to={`/trees/${treeId}`} className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
-          ← Back to Tree
+        <Link to={`/trees/${treeId}`} className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
+          ← Kembali ke Pohon
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Bulk Upload Members</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">Have a lot of family members? Add them instantly by uploading a CSV file.</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-2 mb-1">Upload Massal Anggota</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">Punya banyak anggota keluarga? Tambahkan sekaligus dengan mengupload file CSV.</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm">
+          <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-200 text-sm">
             {error}
           </div>
         )}
 
         <div className="card space-y-6">
           <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/10 text-sm text-blue-800 dark:text-blue-200">
-            <p className="font-semibold mb-2">Step 1: Download Template</p>
-            <p className="mb-3 opacity-90">Please use our standard CSV template to ensure your columns are formatted correctly. Do not alter the column headers.</p>
-            <a href="/template.csv" download className="btn-secondary inline-block px-4 py-2 opacity-100 font-medium">⬇ Download Template.csv</a>
+            <p className="font-semibold mb-2">Langkah 1: Unduh Template</p>
+            <p className="mb-3 opacity-90">Gunakan template CSV standar kami untuk memastikan format kolom sudah benar. Jangan ubah nama kolom header.</p>
+            <a href="/template.csv" download className="btn-secondary inline-block px-4 py-2 opacity-100 font-medium">⬇ Unduh Template.csv</a>
           </div>
 
           <div>
-            <p className="font-semibold mb-2 text-sm text-slate-900 dark:text-white">Step 2: Upload CSV</p>
-            <p className="text-xs text-slate-500 mb-3">Upload the filled template. If a member's name exactly matches an existing person, they will be skipped, but relationships will still link up.</p>
+            <p className="font-semibold mb-2 text-sm text-slate-900 dark:text-white">Langkah 2: Upload CSV</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Upload template yang sudah diisi. Jika nama anggota sama persis dengan yang sudah ada, mereka akan dilewati, namun hubungan keluarga tetap akan dibuat.</p>
             <div 
               className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-10 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
@@ -210,12 +210,12 @@ export default function BulkUpload() {
                 <div>
                   <span className="text-4xl text-brand-500 block mb-2">📄</span>
                   <p className="text-slate-900 dark:text-white font-medium">{file.name}</p>
-                  <p className="text-slate-500 text-xs">{(file.size / 1024).toFixed(2)} KB • Click to change</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs">{(file.size / 1024).toFixed(2)} KB • Klik untuk ganti</p>
                 </div>
               ) : (
                 <div>
                   <span className="text-4xl opacity-50 block mb-2">📤</span>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm">Click to select your .csv file</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm">Klik untuk memilih file .csv</p>
                 </div>
               )}
             </div>
@@ -242,7 +242,7 @@ export default function BulkUpload() {
                 disabled={!file || loading}
                 className="btn-primary w-full"
               >
-                Start Bulk Upload
+                Mulai Upload Massal
               </button>
            )}
           </div>

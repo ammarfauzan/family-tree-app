@@ -103,16 +103,16 @@ export default function InviteMembers() {
 
         <div className="flex items-center justify-between mt-2 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Invite & Members</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Manage who has access to this tree.</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Undang & Anggota</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Kelola siapa yang memiliki akses ke pohon ini.</p>
           </div>
         </div>
 
         {/* Tabs */}
         <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl mb-6 w-fit border border-slate-200 dark:border-slate-800">
           {[
-            { id: 'invite', label: '🔗 Invite Links' },
-            { id: 'members', label: '👥 Members' },
+            { id: 'invite', label: '🔗 Link Undangan' },
+            { id: 'members', label: '👥 Anggota' },
           ].map((t) => (
             <button
               key={t.id}
@@ -136,31 +136,31 @@ export default function InviteMembers() {
           <div className="space-y-6">
             {/* Create invite form */}
             <div className="card space-y-4">
-              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Generate Invite Link</h2>
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white">Buat Link Undangan</h2>
               <form onSubmit={handleCreate} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="label">Role</label>
+                    <label className="label">Peran</label>
                     <select
                       id="inviteRole"
                       className="input"
                       value={form.role}
                       onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
                     >
-                      <option value="viewer">Viewer — read only</option>
-                      <option value="member">Member — can edit</option>
-                      <option value="admin">Admin — full control</option>
+                      <option value="viewer">Pemirsa — hanya baca</option>
+                      <option value="member">Anggota — bisa mengedit</option>
+                      <option value="admin">Admin — kontrol penuh</option>
                     </select>
                   </div>
                   <div>
-                    <label className="label">Link to Person <span className="normal-case font-normal text-slate-600">(optional)</span></label>
+                    <label className="label">Hubungkan ke Anggota <span className="normal-case font-normal text-slate-600">(opsional)</span></label>
                     <select
                       id="invitePersonId"
                       className="input"
                       value={form.personId}
                       onChange={(e) => setForm((f) => ({ ...f, personId: e.target.value }))}
                     >
-                      <option value="">— None —</option>
+                      <option value="">— Tidak ada —</option>
                       {persons.map((p) => (
                         <option key={p.id} value={p.id}>{p.full_name}</option>
                       ))}
@@ -173,7 +173,7 @@ export default function InviteMembers() {
                   disabled={creating}
                   className="btn-primary"
                 >
-                  {creating ? 'Generating…' : '+ Generate Link'}
+                  {creating ? 'Membuat…' : '+ Buat Link'}
                 </button>
               </form>
             </div>
@@ -181,11 +181,11 @@ export default function InviteMembers() {
             {/* Active invites */}
             {invites.length === 0 ? (
               <div className="text-center py-12 text-slate-500 dark:text-slate-400 text-sm">
-                No invite links yet. Generate one above.
+                Belum ada link undangan. Buat link di atas.
               </div>
             ) : (
               <div className="space-y-3">
-                <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Active Links</h2>
+                <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Link Aktif</h2>
                 {invites.map((inv) => (
                   <div
                     key={inv.id}
@@ -208,7 +208,7 @@ export default function InviteMembers() {
                         {inviteLink(inv.token)}
                       </p>
                       <p className="text-xs text-slate-600 mt-0.5">
-                        Expires {new Date(inv.expires_at).toLocaleDateString()}
+                        Kedaluwarsa {new Date(inv.expires_at).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="flex gap-2 flex-shrink-0">
@@ -218,14 +218,14 @@ export default function InviteMembers() {
                           copiedId === inv.token ? 'text-green-400 border-green-700' : ''
                         }`}
                       >
-                        {copiedId === inv.token ? '✓ Copied!' : '📋 Copy'}
+                        {copiedId === inv.token ? '✓ Tersalin!' : '📋 Salin'}
                       </button>
                       {inv.status === 'pending' && (
                         <button
                           onClick={() => handleRevoke(inv)}
                           className="btn-danger text-xs px-3 py-1.5"
                         >
-                          Revoke
+                          Batalkan
                         </button>
                       )}
                     </div>
@@ -238,7 +238,7 @@ export default function InviteMembers() {
           /* Members tab */
           <div className="space-y-3">
             {treeMembers.length === 0 ? (
-              <p className="text-center text-slate-500 dark:text-slate-400 text-sm py-12">No members found.</p>
+              <p className="text-center text-slate-500 dark:text-slate-400 text-sm py-12">Tidak ada anggota ditemukan.</p>
             ) : (
               treeMembers.map((member) => (
                 <div key={member.id} className="card flex items-center gap-4">
@@ -250,7 +250,7 @@ export default function InviteMembers() {
                       {member.profiles?.full_name || 'Unknown User'}
                     </p>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Joined {new Date(member.joined_at).toLocaleDateString()}
+                      Bergabung {new Date(member.joined_at).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ export default function InviteMembers() {
                         onClick={() => handleRemoveMember(member)}
                         className="text-slate-500 dark:text-slate-400 hover:text-red-400 text-xs transition-colors px-2 py-1"
                       >
-                        Remove
+                        Hapus
                       </button>
                     )}
                   </div>

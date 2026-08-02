@@ -9,6 +9,18 @@ import { useMembers } from '../hooks/useMembers';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabaseClient';
 
+function SkeletonMemberCard() {
+  return (
+    <div className="card flex items-center gap-4">
+      <div className="w-12 h-12 rounded-full skeleton flex-shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 w-3/5 skeleton" />
+        <div className="h-3 w-2/5 skeleton" />
+      </div>
+    </div>
+  );
+}
+
 export default function TreeDetail() {
   const { treeId } = useParams();
   const navigate = useNavigate();
@@ -22,6 +34,7 @@ export default function TreeDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('list'); // 'list' | 'tree'
+
   useEffect(() => {
     async function load() {
       try {
@@ -43,22 +56,41 @@ export default function TreeDetail() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [treeId]);
 
+  const livingCount = members.filter((m) => !m.is_deceased).length;
+  const deceasedCount = members.filter((m) => m.is_deceased).length;
+
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="max-w-5xl mx-auto px-4 py-10">
-        <Link to="/dashboard" className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-300 text-sm mb-6 inline-flex items-center gap-1">
-          ← Dashboard
-        </Link>
+      <main className="max-w-5xl mx-auto px-4 py-10 page-enter">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-6">
+          <Link to="/dashboard" className="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+            Dashboard
+          </Link>
+          <span>›</span>
+          <span className="text-slate-900 dark:text-white font-medium truncate">
+            {tree?.name || 'Memuat…'}
+          </span>
+        </nav>
 
         {loading && (
-          <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="h-8 w-64 skeleton" />
+              <div className="h-4 w-96 skeleton" />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <SkeletonMemberCard />
+              <SkeletonMemberCard />
+              <SkeletonMemberCard />
+              <SkeletonMemberCard />
+            </div>
           </div>
         )}
 
         {error && (
-          <div className="p-4 rounded-xl bg-red-900/40 border border-red-700 text-red-300 text-sm mt-4">
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm mt-4">
             {error}
           </div>
         )}
@@ -66,15 +98,28 @@ export default function TreeDetail() {
         {tree && (
           <>
             {/* Tree Header */}
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 mt-2">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{tree.name}</h1>
                 {tree.description && (
                   <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">{tree.description}</p>
                 )}
-                <p className="text-xs text-slate-600 mt-1">
-                  {members.length} member{members.length !== 1 ? 's' : ''}
-                </p>
+                {/* Stats row */}
+                <div className="flex items-center gap-4 mt-2">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                    👥 <strong className="text-slate-700 dark:text-slate-300">{members.length}</strong> anggota
+                  </span>
+                  {livingCount > 0 && (
+                    <span className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                      💚 {livingCount} hidup
+                    </span>
+                  )}
+                  {deceasedCount > 0 && (
+                    <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                      🕊️ {deceasedCount} almarhum
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-2 flex-wrap flex-shrink-0">
@@ -83,19 +128,19 @@ export default function TreeDetail() {
                   onClick={() => navigate(`/trees/${treeId}/invite`)}
                   className="btn-secondary text-sm"
                 >
-                  👥 Invite
+                  👥 Undang
                 </button>
                 <button
                   id="addMemberBtn"
                   onClick={() => navigate(`/trees/${treeId}/members/new`)}
                   className="btn-primary text-sm"
                 >
-                  + Add Member
+                  + Tambah Anggota
                 </button>
                 <button
                   onClick={() => navigate(`/trees/${treeId}/bulk-upload`)}
-                  className="btn-secondary text-sm border-brand-500 text-brand-600 hover:bg-brand-50"
-                  title="Upload CSV to add many members at once"
+                  className="btn-secondary text-sm"
+                  title="Upload CSV untuk menambah banyak anggota sekaligus"
                 >
                   📄 Bulk Upload
                 </button>
@@ -105,16 +150,16 @@ export default function TreeDetail() {
             {/* View toggle */}
             <div className="flex gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl mb-6 w-fit border border-slate-200 dark:border-slate-800">
               {[
-                { id: 'list', label: '☰ List' },
-                { id: 'tree', label: '🌳 Tree View' },
+                { id: 'list', label: '☰ Daftar' },
+                { id: 'tree', label: '🌳 Pohon' },
               ].map((v) => (
                 <button
                   key={v.id}
                   onClick={() => setView(v.id)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     view === v.id
-                      ? 'bg-brand-600 text-slate-900 dark:text-white shadow'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white'
+                      ? 'bg-white dark:bg-slate-800 text-brand-700 dark:text-brand-300 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   {v.label}
@@ -150,14 +195,14 @@ export default function TreeDetail() {
 
                 {members.length === 0 ? (
                   <div className="text-center py-20 space-y-3">
-                    <div className="text-5xl">👤</div>
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">No members yet</h2>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">Add the first person to this tree</p>
+                    <div className="text-6xl">👤</div>
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Belum ada anggota</h2>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Tambahkan orang pertama ke pohon ini</p>
                     <button
                       onClick={() => navigate(`/trees/${treeId}/members/new`)}
                       className="btn-primary"
                     >
-                      + Add Member
+                      + Tambah Anggota
                     </button>
                   </div>
                 ) : (

@@ -24,8 +24,8 @@ export function NotificationBell() {
     <Link
       to="/notifications"
       id="notificationBellBtn"
-      className="relative p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors"
-      title="Notifications"
+      className="relative p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+      title="Notifikasi"
     >
       <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}

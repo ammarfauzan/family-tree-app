@@ -61,7 +61,7 @@ function PersonNode({ data }) {
       <Handle type="target" position={Position.Top} className="!w-4 !h-1 !bg-transparent border-none" />
       <div 
         className={`w-[170px] p-4 flex flex-col items-center justify-center text-center rounded-2xl bg-white dark:bg-slate-800 shadow-xl border-2 transition-all hover:-translate-y-1 cursor-pointer
-          ${isCurrentUser ? 'border-indigo-500 shadow-indigo-500/20' : 'border-slate-100 dark:border-slate-700 shadow-slate-200/50 dark:shadow-black/20'}
+          ${isCurrentUser ? 'border-brand-500 shadow-brand-500/20' : 'border-slate-100 dark:border-slate-700 shadow-slate-200/50 dark:shadow-black/20'}
           ${isDeceased ? 'opacity-80 grayscale' : ''}
         `}
       >
@@ -69,7 +69,7 @@ function PersonNode({ data }) {
           <img 
             src={avatarSrc} 
             alt={person.full_name} 
-            className={`w-14 h-14 rounded-full object-cover border-2 ${isCurrentUser ? 'border-indigo-500' : isDeceased ? 'border-slate-400' : 'border-slate-200 dark:border-slate-600'}`} 
+            className={`w-14 h-14 rounded-full object-cover border-2 ${isCurrentUser ? 'border-brand-500' : isDeceased ? 'border-slate-400' : 'border-slate-200 dark:border-slate-600'}`} 
           />
           {isDeceased && (
             <span className="absolute -top-1 -right-1 text-base leading-none bg-slate-800 rounded-full" title="Deceased">
@@ -134,7 +134,7 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
           target,
           type: 'smoothstep',
           animated: true,
-          style: { stroke: '#818cf8', strokeWidth: 2, opacity: 0.8 }
+          style: { stroke: '#34d399', strokeWidth: 2, opacity: 0.8 }
         });
       }
     });
@@ -184,14 +184,14 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
           disabled={exporting}
           className="btn-secondary text-xs py-1.5 px-3 border-slate-300"
         >
-          {exporting ? 'Exporting…' : '⬇ Export PNG'}
+          {exporting ? 'Mengekspor…' : '⬇ Ekspor PNG'}
         </button>
       </div>
 
       <div
         ref={containerRef}
         className="w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
-        style={{ height: '600px' }}
+        style={{ height: 'min(600px, 60vh)' }}
       >
         <ReactFlow
           nodes={nodes}
@@ -215,7 +215,7 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
           />
           <Controls className="bg-white dark:bg-slate-800 shadow border border-slate-200 dark:border-slate-700" />
           <MiniMap 
-            nodeColor={(n) => n.data.isCurrentUser ? '#6366f1' : '#cbd5e1'}
+            nodeColor={(n) => n.data.isCurrentUser ? '#10b981' : '#cbd5e1'}
             maskColor="rgba(240, 246, 255, 0.4)"
             className="bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden" 
           />
@@ -224,7 +224,7 @@ export function TreeVisualization({ persons, relationships, treeId, currentUserI
 
       <div className="flex items-center justify-center gap-3 mt-3">
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          🖱️ Scroll to zoom &nbsp;·&nbsp; ✋ Drag to pan &nbsp;·&nbsp; 👆 Click a node to view profile
+          🖱️ Scroll untuk zoom &nbsp;·&nbsp; ✋ Drag untuk geser &nbsp;·&nbsp; 👆 Klik anggota untuk lihat profil
         </p>
       </div>
     </div>
